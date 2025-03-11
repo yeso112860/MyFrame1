@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import Home from './routes/Home';
-import Playground from './routes/Playground';
-import NotFound from './routes/NotFound';
+import Home from '~/routes/_layout/Home';
+import Playground from '/routes/_layout/Playground';
+import NotFound from './routes/_layout/NotFound';
 import { useEffect, useState } from 'react';
 import { hasAuthParams, useAuth } from 'react-oidc-context';
 

@@ -3,9 +3,9 @@ import {useQuery} from "@tanstack/react-query";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {useEffect} from "react";
-import {IItem} from "../../utilities/types";
+import {IItem} from "~/utilities/types";
 import {createFileRoute} from "@tanstack/react-router";
-import useMasterContext from "../../store/masterContext.tsx";
+import useMasterContext from "~/store/masterContext.tsx";
 
 const API_PATH_PREFIX = import.meta.env.DEV ? 'api' : import.meta.env.VITE_BACKEND_BASE_URL;
 

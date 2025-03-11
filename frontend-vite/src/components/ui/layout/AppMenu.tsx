@@ -24,12 +24,7 @@ const AppMenu = () => {
 
   useEffect(() => {
     if (selectedId !== "" && selectedClientID !== "") {
-      let userRoles = resourceAccess["movies-app"]?.roles || [];
-      if (selectedClientType === "Kurum" || selectedClientType === "Firma") {
-        userRoles = [];
-        userRoles.push("KURUM YETKİLİSİ");
-      }
-
+      const userRoles = resourceAccess["movies-app"]?.roles || [];
       const encryptedState = CryptoJS.AES.encrypt(
         JSON.stringify(userRoles),
         "ZUVel}*FJ='5ih$A;,a;l=[HjkuKmOGbahji'dy[8id<+hx1Rp>7GglFo,F?&^-",
@@ -41,6 +36,7 @@ const AppMenu = () => {
         itemRoles: string[],
         userRoles: string[],
       ): boolean => {
+        if(!itemRoles || itemRoles.length === 0) return true;
         const normalizedUserRoles = userRoles.map((role) => role.toUpperCase());
         const normalizedItemRoles = itemRoles.map((role) => role.toUpperCase());
 
@@ -74,8 +70,8 @@ const AppMenu = () => {
             return item;
           });
       };
-      const newFilteredItems = items;//filterMenuItems(items);
-      const newFilteredStaticItems = staticItems;//filterMenuItems(staticItems);
+      const newFilteredItems = filterMenuItems(items);
+      const newFilteredStaticItems = filterMenuItems(staticItems);
       setFilteredItems(newFilteredItems);
       setFilteredStaticItems(newFilteredStaticItems);
     } else {

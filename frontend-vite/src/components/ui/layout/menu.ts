@@ -9,13 +9,13 @@ export function getMenu(): AppMenuItem[] {
                     label: "Home Admin",
                     icon: "pi pi-cloud-upload",
                     url: "/Home",
-                    // roles: ["ADMIN"],
+                     roles: ["ADMIN"],
                 },
                 {
                     label: "Home User",
                     icon: "pi pi-cloud-upload",
                     url: "/Home",
-                    // roles: ["USER"],
+                     roles: ["USER"],
                 },
             ],
         },
@@ -26,13 +26,13 @@ export function getMenu(): AppMenuItem[] {
                     label: "Playground Admin",
                     icon: "pi pi-cloud-upload",
                     url: "/Playground",
-                    // roles: ["ADMIN"],
+                    roles: ["ADMIN"],
                 },
                 {
                     label: "Playground User",
                     icon: "pi pi-cloud-upload",
                     url: "/Playground",
-                    // roles: ["USER"],
+                    roles: ["USER"],
                 },
             ],
         }
@@ -44,7 +44,7 @@ export function getStaticMenu() {
         {
             url: "/",
             label: "Anasayfa",
-            roles: ["ANASAYFA"],
+            roles: ["USER"],
         }
     ];
 }

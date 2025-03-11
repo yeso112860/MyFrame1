@@ -1,14 +1,14 @@
 import {useQuery} from '@tanstack/react-query';
 import {useEffect, useState} from 'react';
 import {useAuth} from 'react-oidc-context';
-import {IKullanici} from "../../utilities/types";
+import {IKullanici} from "~/utilities/types";
 import {Column} from "primereact/column";
 import {DataTable} from "primereact/datatable";
 import {jwtDecode} from "jwt-decode";
 import {MultiSelect} from "primereact/multiselect";
-import {useToast} from "../../store/toastContext.tsx";
+import {useToast} from "~/store/toastContext.tsx";
 import {createFileRoute} from "@tanstack/react-router";
-import useMasterContext from "../../store/masterContext.tsx";
+import useMasterContext from "~/store/masterContext.tsx";
 
 
 const API_PATH_PREFIX = import.meta.env.DEV ? 'api' : import.meta.env.VITE_BACKEND_BASE_URL;
