@@ -1,0 +1,6 @@
+liquibase:
+  change-log: /db/db.changelog-master.xml
+  url: jdbc:postgresql://localhost:5432/projem?charSet=UTF-8
+  username: postgres
+  password: root
+  driver: org.postgresql.Driver

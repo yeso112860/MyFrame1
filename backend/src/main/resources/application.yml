@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: backend
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/company-services
+  datasource:
+    url: jdbc:postgresql://localhost:5432/projem?charSet=UTF-8
+    username: postgres
+    password: root
+  jpa:
+    open-in-view: true
+  liquibase:
+    enabled: true
+    change-log: db/changelog/db.changelog-master.xml
+jwt:
+  auth:
+    converter:
+      resource-id: movies-app
+      principal-attribute: preferred_username
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+logging:
+  level:
+    org.springframework.security: debug
+server:
+  port: 8080

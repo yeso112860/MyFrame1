@@ -1,0 +1,45 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1741414994368-1" author="yasiravcibasi">
+        <sql>CREATE
+        EXTENSION IF NOT EXISTS "uuid-ossp"</sql>
+    </changeSet>
+    <changeSet id="1741426576080-1" author="yasiravcibasi">
+        <createTable tableName="kullanici">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_kullanici"/>
+            </column>
+            <column name="olusturulma_zamani" type="DATETIME"/>
+            <column name="username" type="text"/>
+            <column name="password" type="text"/>
+            <column name="email" type="text"/>
+            <column name="first_name" type="text"/>
+            <column name="last_name" type="text"/>
+            <column name="phone" type="text"/>
+            <column name="image_url" type="text"/>
+            <column name="bio" type="text"/>
+        </createTable>
+        <createTable tableName="item">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_item"/>
+            </column>
+            <column name="olusturulma_zamani" type="DATETIME"/>
+            <column name="title" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="author" type="text"/>
+            <column name="publisher" type="text"/>
+            <column name="image_url" type="text"/>
+            <column name="category" type="text"/>
+            <column name="kullanici_id" type="UUID"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="kullanici_id" baseTableName="item"
+                                 constraintName="FK_ITEM_ON_KULLANICI" referencedColumnNames="id"
+                                 referencedTableName="kullanici"/>
+    </changeSet>
+</databaseChangeLog>
