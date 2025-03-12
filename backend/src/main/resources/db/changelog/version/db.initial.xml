@@ -4,10 +4,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="1741414994368-1" author="yasiravcibasi">
-        <sql>CREATE
-        EXTENSION IF NOT EXISTS "uuid-ossp"</sql>
-    </changeSet>
+<!--    <changeSet id="1741414994368-1" author="yasiravcibasi">-->
+<!--        <sql>CREATE-->
+<!--        EXTENSION IF NOT EXISTS "uuid-ossp"</sql>-->
+<!--    </changeSet>-->
     <changeSet id="1741426576080-1" author="yasiravcibasi">
         <createTable tableName="kullanici">
             <column name="id" type="UUID">

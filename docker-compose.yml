@@ -8,14 +8,12 @@ services:
       - ./.env
     volumes:
       - ./frontend-vite/src:/app/src:rw
-    networks:
-      - frame1
+    links:
+      - api:api
+    depends_on:
+      - api
   api:
     build:
       context: ./backend
     ports:
       - ${API_PORT}:${API_PORT}
-    networks:
-      - frame1
-networks:
-  frame1:
