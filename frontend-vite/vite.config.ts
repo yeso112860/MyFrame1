@@ -1,6 +1,7 @@
 import {defineConfig, loadEnv, UserConfigExport} from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite'
+import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import path from "path";
 
 // https://vitejs.dev/config/
@@ -8,7 +9,7 @@ export default defineConfig(({command, mode}) => {
     const env = loadEnv(mode, process.cwd());
 
     const commonConfig: UserConfigExport = {
-        plugins: [react(), tailwindcss(),],
+        plugins: [TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),react(), tailwindcss(),],
         resolve: {
             alias: {
                 "~": path.resolve(__dirname, "src"),
