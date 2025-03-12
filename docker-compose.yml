@@ -1,0 +1,21 @@
+services:
+  react:
+    build:
+      context: ./frontend-vite
+    ports:
+      - ${VITE_PORT}:${VITE_PORT}
+    env_file:
+      - ./.env
+    volumes:
+      - ./frontend-vite/src:/app/src:rw
+    networks:
+      - frame1
+  api:
+    build:
+      context: ./backend
+    ports:
+      - ${API_PORT}:${API_PORT}
+    networks:
+      - frame1
+networks:
+  frame1:
