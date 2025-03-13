@@ -6,9 +6,6 @@ import { useAuth } from "react-oidc-context";
 function LoginPage() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const masterContext = useMasterContext();
-
-
 
   useEffect(() => {
     async function authContext() {

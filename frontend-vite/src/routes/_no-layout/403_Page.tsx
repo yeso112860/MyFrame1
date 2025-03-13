@@ -12,8 +12,7 @@ export default function ForbiddenPageComponent() {
       <div className="text-center">
         <strong>403</strong>
       </div>
-      <div className="text-center">
-        {"Bu sayfaya erişim yetkiniz"} <strong>bulunmamaktadır.</strong>
+      <div className="text-center">Bu sayfaya erişim yetkiniz <strong>bulunmamaktadır.</strong>
       </div>
       <div>
         <Button

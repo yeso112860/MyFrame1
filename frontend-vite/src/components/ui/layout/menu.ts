@@ -1,50 +1,21 @@
-import {AppMenuItem} from "@/utilities/types";
+import {AppMenuItem} from "~/utilities/types";
 
 export function getMenu(): AppMenuItem[] {
     return [
         {
-            label: "Menü 1",
-            items: [
-                {
-                    label: "Home Admin",
-                    icon: "pi pi-cloud-upload",
-                    url: "/Home",
-                     roles: ["ADMIN"],
-                },
-                {
-                    label: "Home User",
-                    icon: "pi pi-cloud-upload",
-                    url: "/Home",
-                     roles: ["USER"],
-                },
-            ],
+            label: 'Anasayfa',
+            items: [{label: 'Anasayfa', icon: 'pi pi-fw pi-home', to: '/Home'}]
         },
         {
-            label: "Menü 2",
+            label: 'Pages',
+            icon: 'pi pi-fw pi-briefcase',
+            to: '/pages',
             items: [
-                {
-                    label: "Playground Admin",
-                    icon: "pi pi-cloud-upload",
-                    url: "/Playground",
-                    roles: ["ADMIN"],
-                },
-                {
-                    label: "Playground User",
-                    icon: "pi pi-cloud-upload",
-                    url: "/Playground",
-                    roles: ["USER"],
-                },
-            ],
-        }
-    ];
-}
-
-export function getStaticMenu() {
-    return [
-        {
-            url: "/",
-            label: "Anasayfa",
-            roles: ["USER"],
-        }
+                {label: 'Error', icon: 'pi pi-times-circle', to: '/ErrorPage'},
+                {label: 'Access Denied', icon: 'pi pi-fw pi-lock', to: '/AccessDenied'},
+                {label: 'Not Found', icon: 'pi pi-fw pi-exclamation-circle', to: '/notfound'},
+                {label: 'Empty', icon: 'pi pi-fw pi-circle-off', to: '/empty'}
+            ]
+        },
     ];
 }

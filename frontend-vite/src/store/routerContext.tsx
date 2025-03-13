@@ -3,12 +3,9 @@ import React, {
   useContext,
   useState,
   ReactNode,
-  useEffect,
 } from "react";
 import { Router } from "@tanstack/react-router";
 import CryptoJS from "crypto-js";
-import { useAuth } from "react-oidc-context";
-import { useSelectedClient } from "selectedClientContext.tsx";
 
 const RouterContext = createContext(null);
 

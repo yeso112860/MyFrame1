@@ -3,7 +3,7 @@ import {useQuery} from "@tanstack/react-query";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {useEffect} from "react";
-import {IItem} from "~/utilities/types";
+import {ITask} from "~/utilities/types";
 import {createFileRoute} from "@tanstack/react-router";
 import useMasterContext from "~/store/masterContext.tsx";
 
@@ -28,7 +28,7 @@ const Home = () => {
     const {isPending, error, data, refetch} = useQuery({
         queryKey: ['Items'],
         retry: false,
-        queryFn: async (): Promise<Array<IItem>> => {
+        queryFn: async (): Promise<Array<ITask>> => {
             const headers: Record<string, string> = {authorization: `Bearer ${initalialAccessToken}`};
             const response = await fetch(API_PATH_PREFIX + apiPath, {headers: headers});
             console.debug(`Querying API '${apiPath}' with token: ${initalialAccessToken}`);
@@ -48,12 +48,12 @@ const Home = () => {
     return (<>
         {isPending ? 'loading...' : error ? 'Error ' + error.message :
             <DataTable value={data}>
-                <Column header="Başlık" field="title"/>
+                <Column header="Başlık" sortable filter field="title"/>
                 <Column header="Açıklama" field="description"/>
                 <Column header="Yazar" field="author"/>
                 <Column header="Yayınevi" field="publisher"/>
                 <Column header="Resim"
-                        body={(item: IItem) => <img src={item.imageUrl} alt={item.description}
+                        body={(item: ITask) => <img src={item.imageUrl} alt={item.description}
                                                     className="w-6rem shadow-2 border-round"/>}/>
             </DataTable>
         }

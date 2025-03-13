@@ -6,11 +6,11 @@ import {Log, UserManager, WebStorageStateStore} from 'oidc-client-ts';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {addLocale, locale, PrimeReactProvider} from "primereact/api";
 import primeTr from "./utilities/translations/prime/tr.json";
-import "primereact/resources/themes/lara-light-indigo/theme.css"; //default theme
+//import "primereact/resources/themes/lara-light-indigo/theme.css"; //default theme
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
-import "./index.scss";
 import "./styles/layout/layout.scss";
+import "./index.scss";
 import {ToastProvider} from "./store/toastContext.tsx";
 import {createRouter, RouterProvider} from "@tanstack/react-router";
 import {LoadingQueueProvider} from "./store/loadingContext.tsx";
@@ -18,6 +18,7 @@ import {LayoutProvider} from "./store/layoutcontext.tsx";
 import {SelectedClientProvider} from "./store/selectedClientContext.tsx";
 import {RouterContextProvider} from "./store/routerContext.tsx";
 import masterContext from "./store/masterContext.tsx";
+import NotFound from "~/routes/_no-layout/NotFound.tsx";
 
 if (import.meta.env.PROD) {
     console.log('Running in production mode, version: ' + import.meta.env.VITE_DEPLOY_VERSION);
@@ -49,8 +50,12 @@ const queryClient = new QueryClient();
 // Set up a Router instance
 const router = createRouter({
     routeTree,
+    defaultNotFoundComponent: () => {
+        return (
+           <NotFound/>
+        )
+    },
 });
-
 // Register things for typesafety
 declare module "@tanstack/react-router" {
     interface Register {
@@ -74,7 +79,6 @@ const primeConfig = {
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        {/*<BrowserRouter>*/}
         <AuthProvider userManager={userManager} onSigninCallback={onSigninCallback}>
             <QueryClientProvider client={queryClient}>
                 <PrimeReactProvider value={primeConfig}>
@@ -88,13 +92,9 @@ createRoot(document.getElementById('root')!).render(
                                 </SelectedClientProvider>
                             </LayoutProvider>
                         </LoadingQueueProvider>
-                        {/*    <Layout>*/}
-                        {/*        <App/>*/}
-                        {/*    </Layout>*/}
                     </ToastProvider>
                 </PrimeReactProvider>
             </QueryClientProvider>
         </AuthProvider>
-        {/*</BrowserRouter>*/}
     </StrictMode>
 )

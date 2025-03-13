@@ -16,11 +16,13 @@ import { Route as LayoutImport } from './routes/_layout'
 import { Route as IndexImport } from './routes/index'
 import { Route as NoLayoutLogoutImport } from './routes/_no-layout/logout'
 import { Route as NoLayoutLoginImport } from './routes/_no-layout/login'
+import { Route as NoLayoutNotFoundImport } from './routes/_no-layout/NotFound'
+import { Route as NoLayoutErrorPageImport } from './routes/_no-layout/ErrorPage'
+import { Route as NoLayoutAccessDeniedImport } from './routes/_no-layout/AccessDenied'
 import { Route as NoLayout403PageImport } from './routes/_no-layout/403_Page'
-import { Route as NoLayout401PageImport } from './routes/_no-layout/401_Page'
-import { Route as LayoutPlaygroundImport } from './routes/_layout/Playground'
-import { Route as LayoutNotFoundImport } from './routes/_layout/NotFound'
+import { Route as LayoutDocumentationImport } from './routes/_layout/documentation'
 import { Route as LayoutHomeImport } from './routes/_layout/Home'
+import { Route as LayoutEmptyImport } from './routes/_layout/Empty'
 
 // Create/Update Routes
 
@@ -52,33 +54,45 @@ const NoLayoutLoginRoute = NoLayoutLoginImport.update({
   getParentRoute: () => NoLayoutRoute,
 } as any)
 
+const NoLayoutNotFoundRoute = NoLayoutNotFoundImport.update({
+  id: '/NotFound',
+  path: '/NotFound',
+  getParentRoute: () => NoLayoutRoute,
+} as any)
+
+const NoLayoutErrorPageRoute = NoLayoutErrorPageImport.update({
+  id: '/ErrorPage',
+  path: '/ErrorPage',
+  getParentRoute: () => NoLayoutRoute,
+} as any)
+
+const NoLayoutAccessDeniedRoute = NoLayoutAccessDeniedImport.update({
+  id: '/AccessDenied',
+  path: '/AccessDenied',
+  getParentRoute: () => NoLayoutRoute,
+} as any)
+
 const NoLayout403PageRoute = NoLayout403PageImport.update({
   id: '/403_Page',
   path: '/403_Page',
   getParentRoute: () => NoLayoutRoute,
 } as any)
 
-const NoLayout401PageRoute = NoLayout401PageImport.update({
-  id: '/401_Page',
-  path: '/401_Page',
-  getParentRoute: () => NoLayoutRoute,
-} as any)
-
-const LayoutPlaygroundRoute = LayoutPlaygroundImport.update({
-  id: '/Playground',
-  path: '/Playground',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
-const LayoutNotFoundRoute = LayoutNotFoundImport.update({
-  id: '/NotFound',
-  path: '/NotFound',
+const LayoutDocumentationRoute = LayoutDocumentationImport.update({
+  id: '/documentation',
+  path: '/documentation',
   getParentRoute: () => LayoutRoute,
 } as any)
 
 const LayoutHomeRoute = LayoutHomeImport.update({
   id: '/Home',
   path: '/Home',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutEmptyRoute = LayoutEmptyImport.update({
+  id: '/Empty',
+  path: '/Empty',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -107,6 +121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NoLayoutImport
       parentRoute: typeof rootRoute
     }
+    '/_layout/Empty': {
+      id: '/_layout/Empty'
+      path: '/Empty'
+      fullPath: '/Empty'
+      preLoaderRoute: typeof LayoutEmptyImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/Home': {
       id: '/_layout/Home'
       path: '/Home'
@@ -114,32 +135,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutHomeImport
       parentRoute: typeof LayoutImport
     }
-    '/_layout/NotFound': {
-      id: '/_layout/NotFound'
-      path: '/NotFound'
-      fullPath: '/NotFound'
-      preLoaderRoute: typeof LayoutNotFoundImport
+    '/_layout/documentation': {
+      id: '/_layout/documentation'
+      path: '/documentation'
+      fullPath: '/documentation'
+      preLoaderRoute: typeof LayoutDocumentationImport
       parentRoute: typeof LayoutImport
-    }
-    '/_layout/Playground': {
-      id: '/_layout/Playground'
-      path: '/Playground'
-      fullPath: '/Playground'
-      preLoaderRoute: typeof LayoutPlaygroundImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_no-layout/401_Page': {
-      id: '/_no-layout/401_Page'
-      path: '/401_Page'
-      fullPath: '/401_Page'
-      preLoaderRoute: typeof NoLayout401PageImport
-      parentRoute: typeof NoLayoutImport
     }
     '/_no-layout/403_Page': {
       id: '/_no-layout/403_Page'
       path: '/403_Page'
       fullPath: '/403_Page'
       preLoaderRoute: typeof NoLayout403PageImport
+      parentRoute: typeof NoLayoutImport
+    }
+    '/_no-layout/AccessDenied': {
+      id: '/_no-layout/AccessDenied'
+      path: '/AccessDenied'
+      fullPath: '/AccessDenied'
+      preLoaderRoute: typeof NoLayoutAccessDeniedImport
+      parentRoute: typeof NoLayoutImport
+    }
+    '/_no-layout/ErrorPage': {
+      id: '/_no-layout/ErrorPage'
+      path: '/ErrorPage'
+      fullPath: '/ErrorPage'
+      preLoaderRoute: typeof NoLayoutErrorPageImport
+      parentRoute: typeof NoLayoutImport
+    }
+    '/_no-layout/NotFound': {
+      id: '/_no-layout/NotFound'
+      path: '/NotFound'
+      fullPath: '/NotFound'
+      preLoaderRoute: typeof NoLayoutNotFoundImport
       parentRoute: typeof NoLayoutImport
     }
     '/_no-layout/login': {
@@ -162,30 +190,34 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface LayoutRouteChildren {
+  LayoutEmptyRoute: typeof LayoutEmptyRoute
   LayoutHomeRoute: typeof LayoutHomeRoute
-  LayoutNotFoundRoute: typeof LayoutNotFoundRoute
-  LayoutPlaygroundRoute: typeof LayoutPlaygroundRoute
+  LayoutDocumentationRoute: typeof LayoutDocumentationRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutEmptyRoute: LayoutEmptyRoute,
   LayoutHomeRoute: LayoutHomeRoute,
-  LayoutNotFoundRoute: LayoutNotFoundRoute,
-  LayoutPlaygroundRoute: LayoutPlaygroundRoute,
+  LayoutDocumentationRoute: LayoutDocumentationRoute,
 }
 
 const LayoutRouteWithChildren =
   LayoutRoute._addFileChildren(LayoutRouteChildren)
 
 interface NoLayoutRouteChildren {
-  NoLayout401PageRoute: typeof NoLayout401PageRoute
   NoLayout403PageRoute: typeof NoLayout403PageRoute
+  NoLayoutAccessDeniedRoute: typeof NoLayoutAccessDeniedRoute
+  NoLayoutErrorPageRoute: typeof NoLayoutErrorPageRoute
+  NoLayoutNotFoundRoute: typeof NoLayoutNotFoundRoute
   NoLayoutLoginRoute: typeof NoLayoutLoginRoute
   NoLayoutLogoutRoute: typeof NoLayoutLogoutRoute
 }
 
 const NoLayoutRouteChildren: NoLayoutRouteChildren = {
-  NoLayout401PageRoute: NoLayout401PageRoute,
   NoLayout403PageRoute: NoLayout403PageRoute,
+  NoLayoutAccessDeniedRoute: NoLayoutAccessDeniedRoute,
+  NoLayoutErrorPageRoute: NoLayoutErrorPageRoute,
+  NoLayoutNotFoundRoute: NoLayoutNotFoundRoute,
   NoLayoutLoginRoute: NoLayoutLoginRoute,
   NoLayoutLogoutRoute: NoLayoutLogoutRoute,
 }
@@ -197,11 +229,13 @@ const NoLayoutRouteWithChildren = NoLayoutRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof NoLayoutRouteWithChildren
+  '/Empty': typeof LayoutEmptyRoute
   '/Home': typeof LayoutHomeRoute
-  '/NotFound': typeof LayoutNotFoundRoute
-  '/Playground': typeof LayoutPlaygroundRoute
-  '/401_Page': typeof NoLayout401PageRoute
+  '/documentation': typeof LayoutDocumentationRoute
   '/403_Page': typeof NoLayout403PageRoute
+  '/AccessDenied': typeof NoLayoutAccessDeniedRoute
+  '/ErrorPage': typeof NoLayoutErrorPageRoute
+  '/NotFound': typeof NoLayoutNotFoundRoute
   '/login': typeof NoLayoutLoginRoute
   '/logout': typeof NoLayoutLogoutRoute
 }
@@ -209,11 +243,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof NoLayoutRouteWithChildren
+  '/Empty': typeof LayoutEmptyRoute
   '/Home': typeof LayoutHomeRoute
-  '/NotFound': typeof LayoutNotFoundRoute
-  '/Playground': typeof LayoutPlaygroundRoute
-  '/401_Page': typeof NoLayout401PageRoute
+  '/documentation': typeof LayoutDocumentationRoute
   '/403_Page': typeof NoLayout403PageRoute
+  '/AccessDenied': typeof NoLayoutAccessDeniedRoute
+  '/ErrorPage': typeof NoLayoutErrorPageRoute
+  '/NotFound': typeof NoLayoutNotFoundRoute
   '/login': typeof NoLayoutLoginRoute
   '/logout': typeof NoLayoutLogoutRoute
 }
@@ -223,11 +259,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_layout': typeof LayoutRouteWithChildren
   '/_no-layout': typeof NoLayoutRouteWithChildren
+  '/_layout/Empty': typeof LayoutEmptyRoute
   '/_layout/Home': typeof LayoutHomeRoute
-  '/_layout/NotFound': typeof LayoutNotFoundRoute
-  '/_layout/Playground': typeof LayoutPlaygroundRoute
-  '/_no-layout/401_Page': typeof NoLayout401PageRoute
+  '/_layout/documentation': typeof LayoutDocumentationRoute
   '/_no-layout/403_Page': typeof NoLayout403PageRoute
+  '/_no-layout/AccessDenied': typeof NoLayoutAccessDeniedRoute
+  '/_no-layout/ErrorPage': typeof NoLayoutErrorPageRoute
+  '/_no-layout/NotFound': typeof NoLayoutNotFoundRoute
   '/_no-layout/login': typeof NoLayoutLoginRoute
   '/_no-layout/logout': typeof NoLayoutLogoutRoute
 }
@@ -237,22 +275,26 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
+    | '/Empty'
     | '/Home'
-    | '/NotFound'
-    | '/Playground'
-    | '/401_Page'
+    | '/documentation'
     | '/403_Page'
+    | '/AccessDenied'
+    | '/ErrorPage'
+    | '/NotFound'
     | '/login'
     | '/logout'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | ''
+    | '/Empty'
     | '/Home'
-    | '/NotFound'
-    | '/Playground'
-    | '/401_Page'
+    | '/documentation'
     | '/403_Page'
+    | '/AccessDenied'
+    | '/ErrorPage'
+    | '/NotFound'
     | '/login'
     | '/logout'
   id:
@@ -260,11 +302,13 @@ export interface FileRouteTypes {
     | '/'
     | '/_layout'
     | '/_no-layout'
+    | '/_layout/Empty'
     | '/_layout/Home'
-    | '/_layout/NotFound'
-    | '/_layout/Playground'
-    | '/_no-layout/401_Page'
+    | '/_layout/documentation'
     | '/_no-layout/403_Page'
+    | '/_no-layout/AccessDenied'
+    | '/_no-layout/ErrorPage'
+    | '/_no-layout/NotFound'
     | '/_no-layout/login'
     | '/_no-layout/logout'
   fileRoutesById: FileRoutesById
@@ -303,38 +347,48 @@ export const routeTree = rootRoute
     "/_layout": {
       "filePath": "_layout.tsx",
       "children": [
+        "/_layout/Empty",
         "/_layout/Home",
-        "/_layout/NotFound",
-        "/_layout/Playground"
+        "/_layout/documentation"
       ]
     },
     "/_no-layout": {
       "filePath": "_no-layout.tsx",
       "children": [
-        "/_no-layout/401_Page",
         "/_no-layout/403_Page",
+        "/_no-layout/AccessDenied",
+        "/_no-layout/ErrorPage",
+        "/_no-layout/NotFound",
         "/_no-layout/login",
         "/_no-layout/logout"
       ]
+    },
+    "/_layout/Empty": {
+      "filePath": "_layout/Empty.tsx",
+      "parent": "/_layout"
     },
     "/_layout/Home": {
       "filePath": "_layout/Home.tsx",
       "parent": "/_layout"
     },
-    "/_layout/NotFound": {
-      "filePath": "_layout/NotFound.tsx",
+    "/_layout/documentation": {
+      "filePath": "_layout/documentation.tsx",
       "parent": "/_layout"
-    },
-    "/_layout/Playground": {
-      "filePath": "_layout/Playground.tsx",
-      "parent": "/_layout"
-    },
-    "/_no-layout/401_Page": {
-      "filePath": "_no-layout/401_Page.tsx",
-      "parent": "/_no-layout"
     },
     "/_no-layout/403_Page": {
       "filePath": "_no-layout/403_Page.tsx",
+      "parent": "/_no-layout"
+    },
+    "/_no-layout/AccessDenied": {
+      "filePath": "_no-layout/AccessDenied.tsx",
+      "parent": "/_no-layout"
+    },
+    "/_no-layout/ErrorPage": {
+      "filePath": "_no-layout/ErrorPage.tsx",
+      "parent": "/_no-layout"
+    },
+    "/_no-layout/NotFound": {
+      "filePath": "_no-layout/NotFound.tsx",
       "parent": "/_no-layout"
     },
     "/_no-layout/login": {

@@ -10,12 +10,8 @@ export const Route = createFileRoute("/_no-layout/logout")({
 export default function LogoutPage() {
   const auth = useAuth();
 
-  const logout = useCallback(async () => {
-    auth.signoutSilent()
-  }, []);
-
   useEffect(() => {
-    logout();
+      auth.signoutRedirect();
   }, []);
 
   return (

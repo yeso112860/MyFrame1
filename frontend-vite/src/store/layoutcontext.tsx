@@ -16,7 +16,6 @@ export const LayoutProvider = ({ children }: ChildContainerProps) => {
     colorScheme: "light",
     theme: "lara-light-indigo",
     scale: 14,
-    breadcrumb: true,
     fullWidthContent: false,
   });
 
