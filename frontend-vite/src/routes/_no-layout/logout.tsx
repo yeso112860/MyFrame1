@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "primereact/button";
 import { useAuth } from "react-oidc-context";
 

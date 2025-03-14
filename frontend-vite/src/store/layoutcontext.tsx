@@ -4,7 +4,7 @@ import {
   LayoutConfig,
   LayoutContextProps,
   LayoutState,
-} from "../utilities/types";
+} from "~/utilities/types";
 
 export const LayoutContext = createContext({} as LayoutContextProps);
 
@@ -74,6 +74,6 @@ export const LayoutProvider = ({ children }: ChildContainerProps) => {
   };
 
   return (
-    <LayoutContext.Provider value={value}>{children}</LayoutContext.Provider>
+    <LayoutContext.Provider value={value}><link id="theme-css" href={`/themes/${layoutConfig.theme}/theme.css`} rel="stylesheet"/>{children}</LayoutContext.Provider>
   );
 };

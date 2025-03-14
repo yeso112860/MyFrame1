@@ -52,7 +52,7 @@ const router = createRouter({
     routeTree,
     defaultNotFoundComponent: () => {
         return (
-           <NotFound/>
+            <NotFound/>
         )
     },
 });
@@ -87,7 +87,7 @@ createRoot(document.getElementById('root')!).render(
                             <LayoutProvider>
                                 <SelectedClientProvider>
                                     <RouterContextProvider router={router} context={masterContext}>
-                                        <RouterProvider router={router} context={masterContext} />
+                                        <RouterProvider router={router} context={masterContext}/>
                                     </RouterContextProvider>
                                 </SelectedClientProvider>
                             </LayoutProvider>
