@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 import {
     Page,
     AppBreadcrumbProps,
-    Breadcrumb,
     BreadcrumbItem,
     MenuProps,
     MenuModel,
@@ -21,9 +20,9 @@ import {
     AppTopbarRef,
     MenuModelItem,
     AppMenuItemProps,
-    AppMenuItem
+    AppMenuItem,
 } from './layout';
-import {ITask,IKullanici} from "./models"
+import {ITask,IParameter} from "./models"
 import { Demo, LayoutType, SortOrderType, CustomEvent, ChartDataState, ChartOptionsState, AppMailSidebarItem, AppMailReplyProps, AppMailProps } from './demo';
 
 
@@ -34,7 +33,6 @@ type ChildContainerProps = {
 export type {
     Page,
     AppBreadcrumbProps,
-    Breadcrumb,
     BreadcrumbItem,
     MenuProps,
     MenuModel,
@@ -64,6 +62,8 @@ export type {
     AppSubMenuProps,
     AppBreadcrumbState,
     MenuModelItem,
-    IKullanici,
+    /********************************/
+    ITask, IParameter
+
 
 };
