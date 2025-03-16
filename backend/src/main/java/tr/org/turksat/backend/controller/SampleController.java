@@ -7,10 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import tr.org.turksat.backend.model.dto.ItemDto;
-import tr.org.turksat.backend.model.dto.KullaniciDto;
+import tr.org.turksat.backend.model.dto.ParameterDto;
+import tr.org.turksat.backend.model.dto.TaskDto;
 import tr.org.turksat.backend.service.SampleService;
 
 import java.util.List;
@@ -27,29 +26,34 @@ public class SampleController {
     private final SampleService sampleService;
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getItems() {
-        return new ResponseEntity<>(sampleService.getItems(), HttpStatus.OK);
+    public ResponseEntity<List<TaskDto>> getTasks() {
+        return new ResponseEntity<>(sampleService.getTasks(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/user")
-    public ResponseEntity<List<KullaniciDto>> getUsers() {
-        return new ResponseEntity<>(sampleService.getKullanicilar(), HttpStatus.OK);
+    //@PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/durumlar")
+    public ResponseEntity<List<ParameterDto>> getStatuses() {
+        return new ResponseEntity<>(sampleService.getStatusParameters(), HttpStatus.OK);
+    }
+
+    @GetMapping("/people")
+    public ResponseEntity<List<ParameterDto>> getPeople() {
+        return new ResponseEntity<>(sampleService.getPeople(), HttpStatus.OK);
     }
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     @PostMapping
-    public ResponseEntity<ItemDto> addItem(@RequestBody ItemDto itemDto,@RequestHeader("Authorization") String token) {
-        itemDto = sampleService.addItem(itemDto);
-        return new ResponseEntity<>(itemDto, HttpStatus.CREATED);
+    public ResponseEntity<TaskDto> addTask(@RequestBody TaskDto taskDto, @RequestHeader("Authorization") String token) {
+        taskDto = sampleService.addTask(taskDto);
+        return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
     }
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteItem(@PathVariable("id") UUID id) {
-        sampleService.deleteItem(id);
+    public ResponseEntity<Object> deleteTask(@PathVariable("id") UUID id) {
+        sampleService.deleteTask(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -15,14 +15,8 @@ import {classNames} from "primereact/utils";
 import {InputTextarea} from "primereact/inputtextarea";
 import {Dropdown, DropdownChangeEvent} from "primereact/dropdown";
 import {Toast} from "primereact/toast";
-import { Form, Formik, useFormik } from "formik";
-import * as Yup from "yup";
-import {Calendar} from "primereact/calendar";
 
-
-const Home = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [httpError, setHttpError] = useState<string | null>(null);
+const Home2 = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [task, setTask] = useState<Task>(emptyTask);
     const [taskDialog, setTaskDialog] = useState(false);
@@ -33,47 +27,8 @@ const Home = () => {
     const toast = useRef<Toast>(null);
     const cm = useRef<ContextMenu>(null);
 
-    /////////////////////////////////////////
-    const validationSchema = Yup.object({
-        title: Yup.string().required("Başlık Zorunlu Alan"),
-        description: Yup.string().required("Duyuru Metni Zorunlu Alan")/*,
-        baslamaTarihi: Yup.date().required("Başlama Tarihi Zorunlu Alan"),
-        bitisTarihi: Yup.date()
-            .required("Bitiş Tarihi Zorunlu Alan")
-            .test("is-greater", "Yayından Kaldırılma Tarihi, Yayınlanma Tarihinden önce olamaz.",
-                function (value) {
-                    const { baslamaTarihi } = this.parent; // `this.parent` diğer alanlara erişim sağlar
-                    if (!baslamaTarihi || !value) return true; // Eğer biri boşsa, kontrol yapma
-                    return new Date(value) >= new Date(baslamaTarihi); // Tarih karşılaştırması
-                },
-            ),*/
-    });
-    const formik: any = useFormik({
-        initialValues: emptyTask,
-        validationSchema: validationSchema,
-        validateOnMount: true,
-        enableReinitialize: true,
-        onSubmit: async (data: Task) => {
-           // addLoading();
-            try {
-                const newObject = {
-                    ...data
-                };
-                taskApi.saveTask(newObject);
-            } catch (error) {
-                console.log(error);
-            //} finally {
-            //    removeLoading();
-            }
-        },
-    });
-
-    /////////////////////////////////////////
 
     useEffect(() => {
-        taskApi.getTasks().then((value) => setTasks(value))
-            .catch((error) => setHttpError(error.message))
-            .finally(() => setIsLoading(false))
     }, []);
     const openNew = () => {
         setTask(emptyTask);
@@ -136,7 +91,6 @@ const Home = () => {
             setTasks(_tasks);
             setTaskDialog(false);
             setTask(emptyTask);
-            taskApi.saveTask(_task);
         }
     }
     const taskDialogFooter = (
@@ -208,7 +162,7 @@ const Home = () => {
     };
     return (<div className="grid crud-demo">
             <Toast ref={toast}/>
-            <ContextMenu ref={cm} model={items}/>
+            <ContextMenu ref={cm} model={items} onHide={() => setTask(null)}/>
             <div className="col-12">
                 <div className="card">
                     <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate}/>
@@ -228,10 +182,9 @@ const Home = () => {
                         header={header} onContextMenu={(e) => onRightClick(e, e.data)}>
                         <Column field="title" header="Tanım" sortable headerStyle={{minWidth: '15rem'}}/>
                         <Column field="description" header="Açıklama" sortable headerStyle={{minWidth: '15rem'}}/>
-                        <Column field="deadline" header="Deadline" sortable/>
                         <Column field="assignedBy.label" header="Atayan"/>
                         <Column field="assignedTo.label" header="Atanan"/>
-                        <Column field="durum.label" header="Durumu"/>
+                        <Column field="status.label" header="Durumu"/>
                     </DataTable>
                 </div>
             </div>
@@ -269,17 +222,6 @@ const Home = () => {
                         {submitted && !task?.description && <Message severity="error" text="Açıklama girilmelidir"/>}
                     </div>
                     <div className="field">
-                        <label htmlFor="deadline">Deadline</label>
-                        <Calendar
-                            id="deadline"
-                            value={task?.deadline}
-                            onChange={(e) => onInputChange(e, "deadline")}
-                            required locale="tr"
-                            className={classNames({"p-invalid": submitted && !task?.deadline})}
-                        />
-                        {submitted && !task?.deadline && <Message severity="error" text="Deadline girilmelidir"/>}
-                    </div>
-                    <div className="field">
                         <label htmlFor="assignedBy">Atayan</label>
                         <Dropdown id="assignedBy" value={task?.assignedBy} options={taskApi.getPeople()} required optionLabel="label"
                                   filter onChange={(e) => onDropChange(e, "assignedBy")}/>
@@ -292,9 +234,9 @@ const Home = () => {
                         {submitted && !task?.assignedTo && <Message severity="error" text="Atanan seçilmelidir"/>}
                     </div>
                     <div className="field">
-                        <label htmlFor="durum">Durumu</label>
-                        <Dropdown id="durum" value={task?.durum} options={taskApi.getDurumlar()} required optionLabel="label"
-                                  onChange={(e) => onDropChange(e, "durum")}/>
+                        <label htmlFor="status">Durumu</label>
+                        <Dropdown id="status" value={task?.durum} options={taskApi.getDurumlar()} required optionLabel="label"
+                                  onChange={(e) => onDropChange(e, "status")}/>
                         {submitted && !task?.durum && <Message severity="error" text="Durumu seçilmelidir"/>}
                     </div>
                 </fieldset>
@@ -302,7 +244,7 @@ const Home = () => {
         </div>
     );
 };
-export const Route = createFileRoute("/_layout/Home")({
-    component: Home,
+export const Route = createFileRoute("/_layout/Home2")({
+    component: Home2,
 });
-export default Home;
+export default Home2;

@@ -21,6 +21,7 @@ import { Route as NoLayoutErrorPageImport } from './routes/_no-layout/ErrorPage'
 import { Route as NoLayoutAccessDeniedImport } from './routes/_no-layout/AccessDenied'
 import { Route as NoLayout403PageImport } from './routes/_no-layout/403_Page'
 import { Route as LayoutDocumentationImport } from './routes/_layout/documentation'
+import { Route as LayoutHome2Import } from './routes/_layout/Home2'
 import { Route as LayoutHomeImport } from './routes/_layout/Home'
 import { Route as LayoutEmptyImport } from './routes/_layout/Empty'
 
@@ -84,6 +85,12 @@ const LayoutDocumentationRoute = LayoutDocumentationImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutHome2Route = LayoutHome2Import.update({
+  id: '/Home2',
+  path: '/Home2',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
 const LayoutHomeRoute = LayoutHomeImport.update({
   id: '/Home',
   path: '/Home',
@@ -133,6 +140,13 @@ declare module '@tanstack/react-router' {
       path: '/Home'
       fullPath: '/Home'
       preLoaderRoute: typeof LayoutHomeImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/Home2': {
+      id: '/_layout/Home2'
+      path: '/Home2'
+      fullPath: '/Home2'
+      preLoaderRoute: typeof LayoutHome2Import
       parentRoute: typeof LayoutImport
     }
     '/_layout/documentation': {
@@ -192,12 +206,14 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteChildren {
   LayoutEmptyRoute: typeof LayoutEmptyRoute
   LayoutHomeRoute: typeof LayoutHomeRoute
+  LayoutHome2Route: typeof LayoutHome2Route
   LayoutDocumentationRoute: typeof LayoutDocumentationRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutEmptyRoute: LayoutEmptyRoute,
   LayoutHomeRoute: LayoutHomeRoute,
+  LayoutHome2Route: LayoutHome2Route,
   LayoutDocumentationRoute: LayoutDocumentationRoute,
 }
 
@@ -231,6 +247,7 @@ export interface FileRoutesByFullPath {
   '': typeof NoLayoutRouteWithChildren
   '/Empty': typeof LayoutEmptyRoute
   '/Home': typeof LayoutHomeRoute
+  '/Home2': typeof LayoutHome2Route
   '/documentation': typeof LayoutDocumentationRoute
   '/403_Page': typeof NoLayout403PageRoute
   '/AccessDenied': typeof NoLayoutAccessDeniedRoute
@@ -245,6 +262,7 @@ export interface FileRoutesByTo {
   '': typeof NoLayoutRouteWithChildren
   '/Empty': typeof LayoutEmptyRoute
   '/Home': typeof LayoutHomeRoute
+  '/Home2': typeof LayoutHome2Route
   '/documentation': typeof LayoutDocumentationRoute
   '/403_Page': typeof NoLayout403PageRoute
   '/AccessDenied': typeof NoLayoutAccessDeniedRoute
@@ -261,6 +279,7 @@ export interface FileRoutesById {
   '/_no-layout': typeof NoLayoutRouteWithChildren
   '/_layout/Empty': typeof LayoutEmptyRoute
   '/_layout/Home': typeof LayoutHomeRoute
+  '/_layout/Home2': typeof LayoutHome2Route
   '/_layout/documentation': typeof LayoutDocumentationRoute
   '/_no-layout/403_Page': typeof NoLayout403PageRoute
   '/_no-layout/AccessDenied': typeof NoLayoutAccessDeniedRoute
@@ -277,6 +296,7 @@ export interface FileRouteTypes {
     | ''
     | '/Empty'
     | '/Home'
+    | '/Home2'
     | '/documentation'
     | '/403_Page'
     | '/AccessDenied'
@@ -290,6 +310,7 @@ export interface FileRouteTypes {
     | ''
     | '/Empty'
     | '/Home'
+    | '/Home2'
     | '/documentation'
     | '/403_Page'
     | '/AccessDenied'
@@ -304,6 +325,7 @@ export interface FileRouteTypes {
     | '/_no-layout'
     | '/_layout/Empty'
     | '/_layout/Home'
+    | '/_layout/Home2'
     | '/_layout/documentation'
     | '/_no-layout/403_Page'
     | '/_no-layout/AccessDenied'
@@ -349,6 +371,7 @@ export const routeTree = rootRoute
       "children": [
         "/_layout/Empty",
         "/_layout/Home",
+        "/_layout/Home2",
         "/_layout/documentation"
       ]
     },
@@ -369,6 +392,10 @@ export const routeTree = rootRoute
     },
     "/_layout/Home": {
       "filePath": "_layout/Home.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/Home2": {
+      "filePath": "_layout/Home2.tsx",
       "parent": "/_layout"
     },
     "/_layout/documentation": {

@@ -22,7 +22,7 @@ import {
     AppMenuItemProps,
     AppMenuItem,
 } from './layout';
-import {ITask,IParameter} from "./models"
+import {Task,Parameter} from "./models"
 import { Demo, LayoutType, SortOrderType, CustomEvent, ChartDataState, ChartOptionsState, AppMailSidebarItem, AppMailReplyProps, AppMailProps } from './demo';
 
 
@@ -63,7 +63,7 @@ export type {
     AppBreadcrumbState,
     MenuModelItem,
     /********************************/
-    ITask, IParameter
+    Task, Parameter
 
 
 };

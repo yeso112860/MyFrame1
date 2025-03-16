@@ -23,23 +23,72 @@
             <column name="image_url" type="text"/>
             <column name="bio" type="text"/>
         </createTable>
-        <createTable tableName="item">
+        <createTable tableName="param_durum">
             <column name="id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_item"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_param_durum"/>
             </column>
             <column name="olusturulma_zamani" type="DATETIME"/>
+            <column name="label" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+        </createTable>
+        <createTable tableName="task">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_task"/>
+            </column>
+            <column name="olusturulma_zamani" type="datetime"/>
             <column name="title" type="text">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="text"/>
-            <column name="author" type="text"/>
-            <column name="publisher" type="text"/>
-            <column name="image_url" type="text"/>
-            <column name="category" type="text"/>
-            <column name="kullanici_id" type="UUID"/>
+            <column name="deadline" type="datetime"/>
+            <column name="assigned_by_id" type="UUID"/>
+            <column name="assigned_to_id" type="UUID"/>
+            <column name="durum_id" type="UUID"/>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="kullanici_id" baseTableName="item"
-                                 constraintName="FK_ITEM_ON_KULLANICI" referencedColumnNames="id"
-                                 referencedTableName="kullanici"/>
+        <addForeignKeyConstraint baseColumnNames="assigned_by_id" baseTableName="task" constraintName="FK_TASK_ON_ASSIGNEDBY" referencedColumnNames="id" referencedTableName="kullanici"/>
+        <addForeignKeyConstraint baseColumnNames="assigned_to_id" baseTableName="task" constraintName="FK_TASK_ON_ASSIGNEDTO" referencedColumnNames="id" referencedTableName="kullanici"/>
+        <addForeignKeyConstraint baseColumnNames="durum_id" baseTableName="task" constraintName="FK_TASK_ON_DURUM" referencedColumnNames="id" referencedTableName="param_durum"/>
     </changeSet>
+    <changeSet id="1742139962611-1" author="yasiravcibasi (generated)">
+        <insert tableName="param_durum"><column name="id" value="d9c2e676-6978-41f7-864f-80f93e79a2ca"/><column name="label" value="Sahipsiz"/><column name="olusturulma_zamani" value="now()"/></insert>
+        <insert tableName="param_durum"><column name="id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/><column name="label" value="Atandı"/><column name="olusturulma_zamani" value="now()"/></insert>
+        <insert tableName="param_durum"><column name="id" value="080ac55a-a871-4e4d-80d7-7dab8ef91f11"/><column name="label" value="Devam Ediyor"/><column name="olusturulma_zamani" value="now()"/></insert>
+        <insert tableName="param_durum"><column name="id" value="725232d7-f3f7-43ba-8c6c-ca70dd68657e"/><column name="label" value="Tamamlandı"/><column name="olusturulma_zamani" value="now()"/></insert>
+        <insert tableName="param_durum"><column name="id" value="25899fa1-3adc-4311-b112-3326c5c37524"/><column name="label" value="İptal"/><column name="olusturulma_zamani" value="now()"/></insert>
+        <insert tableName="kullanici">
+            <column name="id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39" />
+            <column name="username" value="user1"/>
+            <column name="password" value="user1"/>
+            <column name="first_name" value="Hasan"/>
+            <column name="last_name" value="Kaçan"/>
+        </insert>
+        <insert tableName="kullanici">
+            <column name="id" value="313f43ab-5add-4985-8aa2-20cdd2bca696" />
+            <column name="username" value="user2"/>
+            <column name="password" value="user2"/>
+            <column name="first_name" value="Memmet Ali"/>
+            <column name="last_name" value="Kerkenez"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" value="e6b98d95-a7b0-46c5-bb18-5a01c17383d4"/>
+            <column name="assigned_by_id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39"/>
+            <column name="assigned_to_id" value="313f43ab-5add-4985-8aa2-20cdd2bca696"/>
+            <column name="durum_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
+            <column name="title" value="El-Ikdu'l-manzum fi Zikri Efazıli'r-Rum - Ali b. Bali'nin Şaka'ik Zeyli"/>
+            <column name="description" value="CİLTLİ inceleme, eleştirmeli metin, çeviri 723 sayfa. 17x24 cm"/>
+            <column name="deadline" value="2025-04-01 14:00:00"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" value="0e8ef914-ba51-4e41-a084-52c09e3c2ddc"/>
+            <column name="assigned_by_id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39"/>
+            <column name="assigned_to_id" value="313f43ab-5add-4985-8aa2-20cdd2bca696"/>
+            <column name="durum_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
+            <column name="title" value="Muhibbi Divanı : kendi hattıyla"/>
+            <column name="description" value="Divan şiiri--İnceleme Kanuni Sultan Süleyman, 1494-1566 Türkiye Yazma Eserler Kurumu Başkanlığı Yayınları ; 23. Edebiyat ve Sanat Serisi ; 7."/>
+            <column name="deadline" value="2025-04-01 15:00:00"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

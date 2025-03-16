@@ -1,4 +1,4 @@
-import {createFileRoute, Outlet, useRouterState,} from "@tanstack/react-router";
+import {createFileRoute, Outlet, useNavigate, useRouterState,} from "@tanstack/react-router";
 import {AppTopbarRef, LayoutState} from "~/utilities/types";
 import React, {useContext, useEffect, useRef} from "react";
 import AppTopbar from "../components/ui/layout/AppTopbar.tsx";
@@ -9,6 +9,10 @@ import {useEventListener, useUnmountEffect} from "primereact/hooks";
 import {PrimeReactContext} from "primereact/api";
 import AppConfig from "~/components/ui/layout/AppConfig.tsx";
 import AppMenu from "~/components/ui/layout/AppMenu.tsx";
+import {useAuth} from "react-oidc-context";
+import useMasterContext from "~/store/masterContext.tsx";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 
 function AppSidebar() {
@@ -16,6 +20,9 @@ function AppSidebar() {
 }
 
 const LayoutComponent = () => {
+    const auth = useAuth();
+    const navigate = useNavigate();
+    const masterContext = useMasterContext();
     const {layoutConfig, layoutState, setLayoutState} = useContext(LayoutContext);
     const {setRipple} = useContext(PrimeReactContext);
     const topbarRef = useRef<AppTopbarRef>(null);
@@ -123,6 +130,40 @@ const LayoutComponent = () => {
         'p-input-filled': layoutConfig.inputStyle === 'filled',
         'p-ripple-disabled': !layoutConfig.ripple
     });
+
+    useEffect(() => {
+        if (!auth.isLoading) {
+            if (auth?.user?.access_token) {
+                masterContext.setResourceAccess(
+                    jwtDecode(auth?.user?.access_token)?.resource_access,
+                );
+            }
+
+            if (auth?.isAuthenticated) {
+                axios.interceptors.request.use(
+                    function (config) {
+                        config.headers.Authorization = `Bearer ${auth?.user?.access_token}`;
+                        return config;
+                    },
+                    function (error) {
+                        return Promise.reject((error) => alert(error));
+                    },
+                );
+
+                axios.interceptors.response.use(
+                    function (response) {
+                        return response;
+                    },
+                    function (error) {
+                        error.response.status === 401 && navigate({ to: "/logout" });
+                        return Promise.reject(error);
+                    },
+                );
+            } else {
+                navigate({ to: "/login" });
+            }
+        }
+    }, [auth.isLoading]);
 
     return (
         <React.Fragment>
