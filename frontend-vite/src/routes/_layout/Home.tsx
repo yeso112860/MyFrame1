@@ -18,6 +18,7 @@ import {DataTable, DataTableRowEvent} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {createFileRoute} from "@tanstack/react-router";
 import {dateFormatterBackend} from "~/utilities/formatter.ts";
+import { format, parse } from "date-fns";
 
 const Home = () => {
     const {addLoading, removeLoading} = useContext(LoadingQueueContext);
@@ -44,11 +45,6 @@ const Home = () => {
         onSubmit: async (data: Task) => {
             addLoading();
             try {
-                const psd = dateFormatterBackend(
-                    data.deadline,
-                );
-                console.log(psd);
-                console.log(data.deadline);
                 await newTask.mutateAsync({...data});
             } catch (error) {
                 console.log(error);
@@ -129,7 +125,7 @@ const Home = () => {
         Object.keys(_task).map(function (keyName, keyIndex) {
             formik.setFieldValue(keyName, _task[keyName], false);
         })
-        console.log(formik.values)
+        formik.setFieldValue("deadline",new Date(_task.deadline),false );
         setDialogVisible(true);
     };
     const header = (
@@ -142,6 +138,11 @@ const Home = () => {
             </span>
         </div>
     );
+    const dateColumnBody = (_task:Task) => {
+        if((typeof _task.deadline ) === 'string')
+            return format(new Date(_task.deadline),"dd.MM.yyyy HH:mm");
+        return format(_task.deadline,"dd.MM.yyyy HH:mm");
+    }
     return (
         <div className="grid crud-demo">
             <div className="grid crud-demo">
@@ -165,7 +166,7 @@ const Home = () => {
                             header={header} onContextMenu={(e) => onRightClick(e)}>
                             <Column field="title" header="Tanım" sortable headerStyle={{minWidth: '15rem'}}/>
                             <Column field="description" header="Açıklama" sortable headerStyle={{minWidth: '15rem'}}/>
-                            <Column field="deadline" header="Deadline" sortable/>
+                            <Column field="deadline" header="Deadline" sortable body={dateColumnBody}/>
                             <Column field="assignedBy.label" header="Atayan"/>
                             <Column field="assignedTo.label" header="Atanan"/>
                             <Column field="durum.label" header="Durumu"/>
