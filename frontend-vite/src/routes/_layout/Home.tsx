@@ -19,10 +19,12 @@ import {Column} from "primereact/column";
 import {createFileRoute} from "@tanstack/react-router";
 import {dateFormatterBackend} from "~/utilities/formatter.ts";
 import { format, parse } from "date-fns";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 const Home = () => {
     const {addLoading, removeLoading} = useContext(LoadingQueueContext);
     const [dialogVisible, setDialogVisible] = useState(false);
+    const [confirmVisible, setConfirmVisible] = useState(false);
     const [task, setTask] = useState<Task>(emptyTask);
     const {fetchDurumlar, fetchTasks, newTask, deleteTask, fetchPeople} = useTaskHook();
     const [globalFilter, setGlobalFilter] = useState('');
@@ -89,16 +91,12 @@ const Home = () => {
             />
         </>
     );
-    const openNew = () => {
-        setTask(emptyTask);
-        setDialogVisible(true);
-    };
     const leftToolbarTemplate = () => {
         return (
             <div className="my-2">
-                <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew}/>
-                <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={() => {
-                    deleteTask.mutateAsync(task);
+                <Button label="Yeni Kayıt" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew}/>
+                <Button label="Sil" icon="pi pi-trash" severity="danger" onClick={() => {
+                    setConfirmVisible(true);
                 }}/>
             </div>
         );
@@ -113,7 +111,8 @@ const Home = () => {
     };
     const items = [
         {label: 'Görüntüle', icon: 'pi pi-eye', command: () => editTask(task!)},
-        {label: 'Düzenle', icon: 'pi pi-pencil', command: () => editTask(task!)}
+        {label: 'Düzenle', icon: 'pi pi-pencil', command: () => editTask(task!)},
+        {label: 'Sil', icon: 'pi pi-trash', command: () => setConfirmVisible(true)}
     ];
     const onRightClick = (event: DataTableRowEvent) => {
         if (cm.current) {
@@ -128,6 +127,13 @@ const Home = () => {
         formik.setFieldValue("deadline",new Date(_task.deadline),false );
         setDialogVisible(true);
     };
+    const openNew = () => {
+        Object.keys(formik.values).map(function (keyName, keyIndex) {
+            formik.setFieldValue(keyName, null, false);
+        })
+        setDialogVisible(true);
+    };
+
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 className="m-0">Görev Yönetimi</h5>
@@ -151,6 +157,10 @@ const Home = () => {
                     <div className="card">
                         <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate}/>
 
+                        <ConfirmDialog group="declarative"  visible={confirmVisible} onHide={() => setConfirmVisible(false)} defaultFocus="reject" acceptLabel="Evet"
+                            rejectLabel="Hayır"
+                            message="Bu kaydı silmek istediğinizden emin misiniz?" header="Silme Onayı" icon="pi pi-exclamation-triangle" acceptClassName="p-button-danger"
+                            accept={() => {deleteTask.mutateAsync(task)}} reject={ ()=>{}} />
                         <DataTable
                             ref={dt}
                             value={fetchTasks.data}
