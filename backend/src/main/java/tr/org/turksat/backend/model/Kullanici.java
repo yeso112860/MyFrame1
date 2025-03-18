@@ -3,14 +3,25 @@ package tr.org.turksat.backend.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.Where;
+import tr.org.turksat.common.constant.EntityConstant;
+import tr.org.turksat.common.model.BaseEntity;
 
 @Entity
-@Table(name = "kullanici")
-@Getter
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
 @Setter
-public class Kullanici extends BaseModel {
+@Getter
+@EqualsAndHashCode(callSuper=true)
+@Table(name = "kullanici")
+public class Kullanici extends BaseEntity {
     private @Column(columnDefinition = "text") String username;
     private @Column(columnDefinition = "text") String password;
     private @Column(columnDefinition = "text") String email;

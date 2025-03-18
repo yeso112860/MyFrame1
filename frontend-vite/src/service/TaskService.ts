@@ -1,35 +1,35 @@
 import {Parameter, Task} from "~/utilities/types/models.ts";
 import {apiBaseURL} from "~/utilities/constants";
 import axios from "axios";
-import {useQuery} from "@tanstack/react-query";
+import fileDownload from 'js-file-download'
 
 class TaskService {
     getTasks = async (): Promise<Task[]> => {
         const response = await axios.get(`${apiBaseURL}/api/changeit`);
         return response.data;
     };
-    getDurumlar = (): Parameter[] => {
-        const fetchDurumlar = (): Promise<Parameter[]> =>
-            axios.get(`${apiBaseURL}/api/changeit/durumlar`).then((response) => response.data);
-
-        const { data } = useQuery({ queryKey: ['People'], queryFn: fetchDurumlar })
-        // if (!this.durumlar)
-        //     axios.get(`${apiBaseURL}/api/changeit/durumlar`).then((response) => this.durumlar = response.data);
-        return data;
+    getDurumlar = async (): Promise<Parameter[]> => {
+        const response = await axios.get(`${apiBaseURL}/api/changeit/durumlar`);
+        return response.data;
     }
-    getPeople = (): Parameter[] => {
-        const fetchPeople = (): Promise<Parameter[]> =>
-            axios.get(`${apiBaseURL}/api/changeit/people`).then((response) => response.data);
-
-        const { data } = useQuery({ queryKey: ['Durumlar'], queryFn: fetchPeople })
-        // if (!this.people)
-        //     axios.get(`${apiBaseURL}/api/changeit/people`).then((response) => this.people = response.data);
-        return data;
+    getPeople = async (): Promise<Parameter[]> => {
+        const response = await axios.get(`${apiBaseURL}/api/changeit/people`);
+        return response.data;
     }
-
-    saveTask(_task: Task) {
-        if (_task)
-            axios.post(`${apiBaseURL}/api/changeit`,_task);
+    newTask = async (_task: Task) => {
+        if (_task) {
+            const response = await axios.post(`${apiBaseURL}/api/changeit`, _task);
+            return response.data;
+        } else return {}
+    }
+    deleteTask = async (_task: Task) => {
+        if (_task && _task.id) {
+            const response = await axios.delete(`${apiBaseURL}/api/changeit/${_task.id}`, _task);
+            return response.data;
+        } else return {}
+    }
+    exportTasks = async () => {
+         axios.get(`${apiBaseURL}/api/changeit/export`).then(response => fileDownload(response.data,'file.xlsx'));
     }
 }
 

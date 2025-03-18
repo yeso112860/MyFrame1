@@ -1,4 +1,4 @@
-package tr.org.turksat.backend;
+package tr.org.turksat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

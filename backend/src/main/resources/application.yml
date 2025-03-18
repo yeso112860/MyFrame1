@@ -32,5 +32,6 @@ springdoc:
 logging:
   level:
     org.springframework.security: debug
+    org.h2.jdbc: debug
 server:
   port: 8080

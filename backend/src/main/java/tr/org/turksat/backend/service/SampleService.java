@@ -11,6 +11,9 @@ import tr.org.turksat.backend.model.mapper.KullaniciMapper;
 import tr.org.turksat.backend.model.mapper.TaskMapper;
 import tr.org.turksat.backend.repository.KullaniciRepository;
 import tr.org.turksat.backend.repository.TaskRepository;
+import tr.org.turksat.common.model.dto.BaseRequestDto;
+import tr.org.turksat.common.model.dto.ResourceDto;
+import tr.org.turksat.common.service.ExporterService;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,20 +29,17 @@ public class SampleService {
     private KullaniciRepository kullaniciRepository;
     @Autowired
     private KullaniciMapper kullaniciMapper;
+    @Autowired
+    private ExporterService exporterService;
 
     public List<TaskDto> getTasks() {
-        // List<Task> all = taskRepository.findAll();
-        // List<TaskDto> dtoList = taskMapper.toDtoList(all);
         List<TaskDto> dtoList = taskRepository.findAllDto();
         return dtoList;
     }
 
     public TaskDto addTask(TaskDto taskDto) {
-        Task entity = taskMapper.toEntity(taskDto);
-        if(taskDto.getId() == null) {
-            entity.setId(UUID.randomUUID());
-        }
-        return taskMapper.toDto(taskRepository.save(entity));
+        Task entity = taskMapper.dtoToEntity(taskDto);
+        return taskMapper.entityToDto(taskRepository.save(entity));
     }
 
     public void deleteTask(UUID id) {
@@ -73,5 +73,13 @@ public class SampleService {
 
     public List<ParameterDto> getPeople() {
         return taskRepository.getPeople();
+    }
+
+    public ResourceDto exportTasks() {
+        List<TaskDto> allDto = taskRepository.findAllDto();
+        BaseRequestDto requestDto = BaseRequestDto.builder().
+                fieldNames(List.of("id", "title", "description")).
+                exportType("excel").build();
+        return exporterService.export(requestDto, allDto, "");
     }
 }

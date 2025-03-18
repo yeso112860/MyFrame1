@@ -21,6 +21,7 @@ import { Route as NoLayoutErrorPageImport } from './routes/_no-layout/ErrorPage'
 import { Route as NoLayoutAccessDeniedImport } from './routes/_no-layout/AccessDenied'
 import { Route as NoLayout403PageImport } from './routes/_no-layout/403_Page'
 import { Route as LayoutDocumentationImport } from './routes/_layout/documentation'
+import { Route as LayoutHomebckImport } from './routes/_layout/Home_bck'
 import { Route as LayoutHome2Import } from './routes/_layout/Home2'
 import { Route as LayoutHomeImport } from './routes/_layout/Home'
 import { Route as LayoutEmptyImport } from './routes/_layout/Empty'
@@ -82,6 +83,12 @@ const NoLayout403PageRoute = NoLayout403PageImport.update({
 const LayoutDocumentationRoute = LayoutDocumentationImport.update({
   id: '/documentation',
   path: '/documentation',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutHomebckRoute = LayoutHomebckImport.update({
+  id: '/Home_bck',
+  path: '/Home_bck',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -149,6 +156,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutHome2Import
       parentRoute: typeof LayoutImport
     }
+    '/_layout/Home_bck': {
+      id: '/_layout/Home_bck'
+      path: '/Home_bck'
+      fullPath: '/Home_bck'
+      preLoaderRoute: typeof LayoutHomebckImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/documentation': {
       id: '/_layout/documentation'
       path: '/documentation'
@@ -207,6 +221,7 @@ interface LayoutRouteChildren {
   LayoutEmptyRoute: typeof LayoutEmptyRoute
   LayoutHomeRoute: typeof LayoutHomeRoute
   LayoutHome2Route: typeof LayoutHome2Route
+  LayoutHomebckRoute: typeof LayoutHomebckRoute
   LayoutDocumentationRoute: typeof LayoutDocumentationRoute
 }
 
@@ -214,6 +229,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutEmptyRoute: LayoutEmptyRoute,
   LayoutHomeRoute: LayoutHomeRoute,
   LayoutHome2Route: LayoutHome2Route,
+  LayoutHomebckRoute: LayoutHomebckRoute,
   LayoutDocumentationRoute: LayoutDocumentationRoute,
 }
 
@@ -248,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/Empty': typeof LayoutEmptyRoute
   '/Home': typeof LayoutHomeRoute
   '/Home2': typeof LayoutHome2Route
+  '/Home_bck': typeof LayoutHomebckRoute
   '/documentation': typeof LayoutDocumentationRoute
   '/403_Page': typeof NoLayout403PageRoute
   '/AccessDenied': typeof NoLayoutAccessDeniedRoute
@@ -263,6 +280,7 @@ export interface FileRoutesByTo {
   '/Empty': typeof LayoutEmptyRoute
   '/Home': typeof LayoutHomeRoute
   '/Home2': typeof LayoutHome2Route
+  '/Home_bck': typeof LayoutHomebckRoute
   '/documentation': typeof LayoutDocumentationRoute
   '/403_Page': typeof NoLayout403PageRoute
   '/AccessDenied': typeof NoLayoutAccessDeniedRoute
@@ -280,6 +298,7 @@ export interface FileRoutesById {
   '/_layout/Empty': typeof LayoutEmptyRoute
   '/_layout/Home': typeof LayoutHomeRoute
   '/_layout/Home2': typeof LayoutHome2Route
+  '/_layout/Home_bck': typeof LayoutHomebckRoute
   '/_layout/documentation': typeof LayoutDocumentationRoute
   '/_no-layout/403_Page': typeof NoLayout403PageRoute
   '/_no-layout/AccessDenied': typeof NoLayoutAccessDeniedRoute
@@ -297,6 +316,7 @@ export interface FileRouteTypes {
     | '/Empty'
     | '/Home'
     | '/Home2'
+    | '/Home_bck'
     | '/documentation'
     | '/403_Page'
     | '/AccessDenied'
@@ -311,6 +331,7 @@ export interface FileRouteTypes {
     | '/Empty'
     | '/Home'
     | '/Home2'
+    | '/Home_bck'
     | '/documentation'
     | '/403_Page'
     | '/AccessDenied'
@@ -326,6 +347,7 @@ export interface FileRouteTypes {
     | '/_layout/Empty'
     | '/_layout/Home'
     | '/_layout/Home2'
+    | '/_layout/Home_bck'
     | '/_layout/documentation'
     | '/_no-layout/403_Page'
     | '/_no-layout/AccessDenied'
@@ -372,6 +394,7 @@ export const routeTree = rootRoute
         "/_layout/Empty",
         "/_layout/Home",
         "/_layout/Home2",
+        "/_layout/Home_bck",
         "/_layout/documentation"
       ]
     },
@@ -396,6 +419,10 @@ export const routeTree = rootRoute
     },
     "/_layout/Home2": {
       "filePath": "_layout/Home2.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/Home_bck": {
+      "filePath": "_layout/Home_bck.tsx",
       "parent": "/_layout"
     },
     "/_layout/documentation": {

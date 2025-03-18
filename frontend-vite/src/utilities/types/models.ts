@@ -8,7 +8,7 @@ export class Task {
     assignedTo?: Parameter;
     durum?: Parameter;
 
-    constructor(id?: string, title?: string, description?: string, deadline: Date, assignedBy?: Parameter, assignedTo?: Parameter, durum?: Parameter) {
+    constructor(id?: string, title?: string, description?: string, deadline?: Date, assignedBy?: Parameter, assignedTo?: Parameter, durum?: Parameter) {
         this.id = id;
         this.title = title;
         this.description = description;

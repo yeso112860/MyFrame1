@@ -51,7 +51,7 @@ public class TaskCustomRepositoryImpl implements TaskCustomRepository {
         query.leftJoin(qt.assignedBy(), ab);
         query.leftJoin(qt.durum(), par);
         query.select(Projections.bean(TaskDto.class,
-                qt.id, qt.title, qt.description,qt.deadline,
+                qt.id, qt.title, qt.description,qt.deadline,qt.versiyon,
                 Projections.bean(ParameterDto.class, ab.id, ab.firstName.as("label")).as("assignedBy"),
                 Projections.constructor(ParameterDto.class, at.id, at.firstName).as("assignedTo"),
                 Projections.constructor(ParameterDto.class, par.id, par.label).as("durum")
