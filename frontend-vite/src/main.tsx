@@ -35,8 +35,8 @@ const userManager = new UserManager({
     redirect_uri: `${window.location.origin}${window.location.pathname}`,
     post_logout_redirect_uri: window.location.origin,
     scope: 'openid profile',
-    userStore: new WebStorageStateStore({store: window.sessionStorage}),
-    // userStore: new WebStorageStateStore({ store: window.localStorage }),
+    //userStore: new WebStorageStateStore({store: window.sessionStorage}),
+    userStore: new WebStorageStateStore({ store: window.localStorage }),
     monitorSession: true, // this allows cross tab login/logout detection
     automaticSilentRenew: true
 });
