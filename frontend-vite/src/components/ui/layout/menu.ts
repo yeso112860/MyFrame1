@@ -14,7 +14,8 @@ export function getMenu(): AppMenuItem[] {
                 {label: 'Error', icon: 'pi pi-times-circle', to: '/ErrorPage'},
                 {label: 'Access Denied', icon: 'pi pi-fw pi-lock', to: '/AccessDenied'},
                 {label: 'Not Found', icon: 'pi pi-fw pi-exclamation-circle', to: '/notfound'},
-                {label: 'Empty', icon: 'pi pi-fw pi-circle-off', to: '/empty'}
+                {label: 'Empty', icon: 'pi pi-fw pi-circle-off', to: '/empty'},
+                {label: 'Kanbanımsı', icon: 'pi pi-fw pi-sliders-v', to: '/DragDrop'},
             ]
         },
     ];

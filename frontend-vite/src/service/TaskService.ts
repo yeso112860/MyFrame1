@@ -1,7 +1,6 @@
 import {Parameter, Task} from "~/utilities/types/models.ts";
 import {apiBaseURL} from "~/utilities/constants";
 import axios from "axios";
-import fileDownload from 'js-file-download'
 
 class TaskService {
     getTasks = async (): Promise<Task[]> => {
@@ -24,12 +23,12 @@ class TaskService {
     }
     deleteTask = async (_task: Task) => {
         if (_task && _task.id) {
-            const response = await axios.delete(`${apiBaseURL}/api/changeit/${_task.id}`, _task);
+            const response = await axios.delete(`${apiBaseURL}/api/changeit/${_task.id}`);
             return response.data;
         } else return {}
     }
     exportTasks = async () => {
-         axios.get(`${apiBaseURL}/api/changeit/export`).then(response => fileDownload(response.data,'file.xlsx'));
+         axios.get(`${apiBaseURL}/api/changeit/export`).then(response => response.data);
     }
 }
 
