@@ -15,13 +15,14 @@ import {format} from "date-fns";
 import {ConfirmDialog} from "primereact/confirmdialog";
 import {NewTaskDialog} from "~/components/ui/dialog/NewTaskDialog.tsx";
 import {createFileRoute} from "@tanstack/react-router";
+import "primeflex/themes/primeone-light.css"
 
 const Home = () => {
     const {addLoading, removeLoading} = useContext(LoadingQueueContext);
     const [dialogVisible, setDialogVisible] = useState(false);
     const [confirmVisible, setConfirmVisible] = useState(false);
     const [task, setTask] = useState<Task>(new Task);
-    const {fetchStatuses, fetchTasks, newTask, deleteTask, fetchPeople} = useTaskHook();
+    const {fetchTasks, newTask, deleteTask} = useTaskHook();
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef<DataTable<Task[]>>(null);
     const cm = useRef<ContextMenu>(null);
@@ -50,9 +51,6 @@ const Home = () => {
             }
         },
     });
-
-    //validasyon hata mesajları
-
 
     function hideDialog() {
         setDialogVisible(false);
@@ -95,9 +93,6 @@ const Home = () => {
         setDialogVisible(true);
     };
     const openNew = () => {
-        Object.keys(formik.values).map(function (keyName, keyIndex) {
-            formik.setFieldValue(keyName, null, false);
-        })
         setDialogVisible(true);
     };
 
