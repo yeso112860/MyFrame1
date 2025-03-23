@@ -7,8 +7,8 @@ class TaskService {
         const response = await axios.get(`${apiBaseURL}/api/changeit`);
         return response.data;
     };
-    getDurumlar = async (): Promise<Parameter[]> => {
-        const response = await axios.get(`${apiBaseURL}/api/changeit/durumlar`);
+    getStatuses = async (): Promise<Parameter[]> => {
+        const response = await axios.get(`${apiBaseURL}/api/changeit/statuses`);
         return response.data;
     }
     getPeople = async (): Promise<Parameter[]> => {
@@ -33,13 +33,3 @@ class TaskService {
 }
 
 export const taskApi = new TaskService();
-
-export const emptyTask: Task = {
-    id: undefined,
-    title: undefined,
-    description: undefined,
-    reportedBy: undefined,
-    assignedBy: undefined,
-    assignedTo: undefined,
-    durum: undefined
-};

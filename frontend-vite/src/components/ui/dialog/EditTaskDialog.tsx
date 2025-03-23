@@ -19,15 +19,15 @@ interface TaskDialogProps {
 
 export const EditTaskDialog = ({ isVisible, hideDialog }: TaskDialogProps) => {
     const { addLoading, removeLoading } = useContext(LoadingQueueContext);
-    const { fetchDurumlar, fetchTasks, newTask, deleteTask, fetchPeople } = useTaskHook();
+    const { fetchStatuses, fetchTasks, newTask, deleteTask, fetchPeople } = useTaskHook();
     const validationSchema = Yup.object({
         title: Yup.string().required("Görev Tanımı Zorunlu alan"),
         description: Yup.string().required("Görev Açıklaması Zorunlu alan"),
-        deadline: Yup.string().required("Görev Deadline Zorunlu alan"),
+        dueDate: Yup.string().required("Görev Teslim Tarihi Zorunlu alan"),
         assignedBy: Yup.object().required("Görevi Atayan Zorunlu alan"),
         assignedTo: Yup.object().required("Görev Atanan Zorunlu alan"),
-        durum: Yup.object().required("Görev Durumu Zorunlu alan"),
-        //durumu: Yup.number().typeError("Servis Versiyonu Alanı sadece sayı olmalıdır"),
+        status: Yup.object().required("Görev Durumu Zorunlu alan"),
+        //status: Yup.number().typeError("Servis Versiyonu Alanı sadece sayı olmalıdır"),
     });
     const formik = useFormik({
         initialValues: new Task(),
@@ -105,14 +105,14 @@ export const EditTaskDialog = ({ isVisible, hideDialog }: TaskDialogProps) => {
                         />{getFormErrorMessage("description")}
                     </div>
                     <div className="field">
-                        <label htmlFor="deadline">Deadline</label>
+                        <label htmlFor="dueDate">Teslim Tarihi</label>
                         <Calendar
-                            id="deadline" showTime
-                            value={formik.values?.deadline}
+                            id="dueDate" showTime
+                            value={formik.values?.dueDate}
                             onChange={formik.handleChange}
                             required locale="tr"
-                            className={classNames("w-full", {"p-invalid": isFormFieldInvalid("deadline")})}
-                        />{getFormErrorMessage("deadline")}
+                            className={classNames("w-full", {"p-invalid": isFormFieldInvalid("dueDate")})}
+                        />{getFormErrorMessage("dueDate")}
                     </div>
                     <div className="field">
                         <label htmlFor="assignedBy">Atayan</label>
@@ -133,12 +133,12 @@ export const EditTaskDialog = ({ isVisible, hideDialog }: TaskDialogProps) => {
                         {getFormErrorMessage("assignedTo")}
                     </div>
                     <div className="field">
-                        <label htmlFor="durum">Durumu</label>
-                        <Dropdown id="durum" value={formik.values?.durum} options={fetchDurumlar.data} required
+                        <label htmlFor="status">Durumu</label>
+                        <Dropdown id="status" value={formik.values?.status} options={fetchStatuses.data} required
                                   optionLabel="label"
-                                  className={classNames("w-full", {"p-invalid": isFormFieldInvalid("durum")})}
+                                  className={classNames("w-full", {"p-invalid": isFormFieldInvalid("status")})}
                                   onChange={formik.handleChange}/>
-                        {getFormErrorMessage("durum")}
+                        {getFormErrorMessage("status")}
                     </div>
     </Dialog>
 }

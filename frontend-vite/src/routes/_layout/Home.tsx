@@ -1,32 +1,27 @@
 import {useFormik} from "formik";
-import React, {useContext, useRef, useState} from "react";
+import {useContext, useRef, useState} from "react";
 import * as Yup from "yup";
 import {LoadingQueueContext} from "~/store/loadingContext.tsx";
 import {useTaskHook} from "~/hooks/useTaskHook.tsx";
-import {Task} from "~/utilities/types";
-import {emptyTask, taskApi} from "~/service/TaskService.ts";
-import {Dialog} from "primereact/dialog";
+import {Task, TaskPriority} from "~/utilities/types/models";
+import {taskApi} from "~/service/TaskService.ts";
 import {InputText} from "primereact/inputtext";
-import {classNames} from "primereact/utils";
-import {InputTextarea} from "primereact/inputtextarea";
-import {Calendar} from "primereact/calendar";
-import {Dropdown} from "primereact/dropdown";
 import {Button} from "primereact/button";
 import {ContextMenu} from "primereact/contextmenu";
 import {Toolbar} from "primereact/toolbar";
 import {DataTable, DataTableRowEvent} from "primereact/datatable";
 import {Column} from "primereact/column";
+import {format} from "date-fns";
+import {ConfirmDialog} from "primereact/confirmdialog";
+import {NewTaskDialog} from "~/components/ui/dialog/NewTaskDialog.tsx";
 import {createFileRoute} from "@tanstack/react-router";
-import {dateFormatterBackend} from "~/utilities/formatter.ts";
-import { format, parse } from "date-fns";
-import { ConfirmDialog } from "primereact/confirmdialog";
 
 const Home = () => {
     const {addLoading, removeLoading} = useContext(LoadingQueueContext);
     const [dialogVisible, setDialogVisible] = useState(false);
     const [confirmVisible, setConfirmVisible] = useState(false);
-    const [task, setTask] = useState<Task>(emptyTask);
-    const {fetchDurumlar, fetchTasks, newTask, deleteTask, fetchPeople} = useTaskHook();
+    const [task, setTask] = useState<Task>(new Task);
+    const {fetchStatuses, fetchTasks, newTask, deleteTask, fetchPeople} = useTaskHook();
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef<DataTable<Task[]>>(null);
     const cm = useRef<ContextMenu>(null);
@@ -34,7 +29,7 @@ const Home = () => {
     const validationSchema = Yup.object({
         title: Yup.string().required("Görev Tanımı Zorunlu alan"),
         description: Yup.string().required("Görev Açıklaması Zorunlu alan"),
-        deadline: Yup.string().required("Görev Deadline Zorunlu alan"),
+        dueDate: Yup.string().required("Görev Teslim Tarihi Zorunlu alan"),
         assignedBy: Yup.object().required("Görevi Atayan Zorunlu alan"),
         assignedTo: Yup.object().required("Görev Atanan Zorunlu alan"),
         durum: Yup.object().required("Görev Durumu Zorunlu alan"),
@@ -55,42 +50,14 @@ const Home = () => {
             }
         },
     });
-    //validasyon hata mesajları
-    const isFormFieldInvalid = (name: string) =>
-        !!(formik.touched[name] && formik.errors[name]);
 
-    const getFormErrorMessage = (name: string) => {
-        return isFormFieldInvalid(name) ? (
-            <small className="p-error">{formik.errors[name]}</small>
-        ) : (
-            <small className="p-error">&nbsp;</small>
-        );
-    };
+    //validasyon hata mesajları
+
 
     function hideDialog() {
         setDialogVisible(false);
     }
 
-    const taskDialogFooter = (
-        <>
-            <Button
-                label="İptal"
-                icon="pi pi-times"
-                className="p-button-text"
-                onClick={hideDialog}
-            />
-            <Button
-                label="Kaydet"
-                icon="pi pi-check"
-                className="p-button-text"
-                type="submit"
-                onClick={() => {
-                    formik.handleSubmit();
-                    if (Object.keys(formik.errors).length == 0) hideDialog();
-                }}
-            />
-        </>
-    );
     const leftToolbarTemplate = () => {
         return (
             <div className="my-2">
@@ -105,7 +72,7 @@ const Home = () => {
     const rightToolbarTemplate = () => {
         return (
             <>
-                <Button label="Export" icon="pi pi-excel" severity="help" onClick={taskApi.exportTasks} />
+                <Button label="Export" icon="pi pi-excel" severity="help" onClick={taskApi.exportTasks}/>
             </>
         );
     };
@@ -124,7 +91,7 @@ const Home = () => {
         Object.keys(_task).map(function (keyName, keyIndex) {
             formik.setFieldValue(keyName, _task[keyName], false);
         })
-        formik.setFieldValue("deadline",new Date(_task.deadline),false );
+        formik.setFieldValue("dueDate", new Date(_task.dueDate), false);
         setDialogVisible(true);
     };
     const openNew = () => {
@@ -144,10 +111,33 @@ const Home = () => {
             </span>
         </div>
     );
-    const dateColumnBody = (_task:Task) => {
-        if((typeof _task.deadline ) === 'string')
-            return format(new Date(_task.deadline),"dd.MM.yyyy HH:mm");
-        return format(_task.deadline,"dd.MM.yyyy HH:mm");
+    const priorityColumnBody = (_task: Task) => {
+        let label,styleClazz;
+        switch (_task.priority) {
+            case TaskPriority.High:
+                label = 'Yüksek';
+                styleClazz = 'bg-red-100 text-red-800';
+                break
+            case TaskPriority.Medium:
+                label = 'Orta';
+                styleClazz =  'bg-yellow-100 text-yellow-800';
+                break
+            case TaskPriority.Low:
+                label = 'İkincil';
+                styleClazz =  'bg-green-100 text-green-800';
+                break
+            default:
+                label = 'None';
+                styleClazz =  'bg-gray-100 text-gray-800';
+        }
+        return (
+            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${styleClazz}`}>{label}</span>
+        )
+    }
+    const dateColumnBody = (_task: Task) => {
+        if ((typeof _task.dueDate) === 'string')
+            return format(new Date(_task.dueDate), "dd.MM.yyyy HH:mm");
+        return format(_task.dueDate, "dd.MM.yyyy HH:mm");
     }
     return (
         <div className="grid crud-demo">
@@ -157,10 +147,15 @@ const Home = () => {
                     <div className="card">
                         <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate}/>
 
-                        <ConfirmDialog group="declarative"  visible={confirmVisible} onHide={() => setConfirmVisible(false)} defaultFocus="reject" acceptLabel="Evet"
-                            rejectLabel="Hayır"
-                            message="Bu kaydı silmek istediğinizden emin misiniz?" header="Silme Onayı" icon="pi pi-exclamation-triangle" acceptClassName="p-button-danger"
-                            accept={() => {deleteTask.mutateAsync(task)}} reject={ ()=>{}} />
+                        <ConfirmDialog group="declarative" visible={confirmVisible}
+                                       onHide={() => setConfirmVisible(false)} defaultFocus="reject" acceptLabel="Evet"
+                                       rejectLabel="Hayır"
+                                       message="Bu kaydı silmek istediğinizden emin misiniz?" header="Silme Onayı"
+                                       icon="pi pi-exclamation-triangle" acceptClassName="p-button-danger"
+                                       accept={() => {
+                                           deleteTask.mutateAsync(task)
+                                       }} reject={() => {
+                        }}/>
                         <DataTable
                             ref={dt}
                             value={fetchTasks.data}
@@ -175,82 +170,16 @@ const Home = () => {
                             tableStyle={{minWidth: '50rem'}}
                             header={header} onContextMenu={(e) => onRightClick(e)}>
                             <Column field="title" header="Tanım" sortable headerStyle={{minWidth: '15rem'}}/>
-                            <Column field="description" header="Açıklama" sortable headerStyle={{minWidth: '15rem'}}/>
-                            <Column field="deadline" header="Deadline" sortable body={dateColumnBody}/>
+                            <Column field="priority" header="Öncelik" sortable body={priorityColumnBody}/>
+                            <Column field="dueDate" header="Teslim Tarihi" sortable body={dateColumnBody}/>
                             <Column field="assignedBy.label" header="Atayan"/>
                             <Column field="assignedTo.label" header="Atanan"/>
-                            <Column field="durum.label" header="Durumu"/>
+                            <Column field="status.label" header="Durumu"/>
                         </DataTable>
                     </div>
                 </div>
-                <Dialog
-                    id="taskDialog"
-                    key="taskDialog"
-                    visible={dialogVisible}
-                    style={{width: "450px"}}
-                    header="Onay"
-                    modal
-                    footer={taskDialogFooter}
-                    onHide={hideDialog}
-                >
-                    <div className="field">
-                        <label htmlFor="title">Tanımı</label>
-                        <InputText
-                            id="title"
-                            value={formik.values?.title}
-                            onChange={formik.handleChange}
-                            required
-                            autoFocus
-                            className={classNames("w-full", {"p-invalid": isFormFieldInvalid("title")})}
-                        />{getFormErrorMessage("title")}
-                    </div>
-                    <div className="field">
-                        <label htmlFor="description">Açıklaması</label>
-                        <InputTextarea
-                            id="description"
-                            value={formik.values?.description}
-                            onChange={formik.handleChange}
-                            required
-                            className={classNames("w-full", {"p-invalid": isFormFieldInvalid("description")})}
-                        />{getFormErrorMessage("description")}
-                    </div>
-                    <div className="field">
-                        <label htmlFor="deadline">Deadline</label>
-                        <Calendar
-                            id="deadline" showTime
-                            value={formik.values?.deadline}
-                            onChange={formik.handleChange}
-                            required locale="tr"
-                            className={classNames("w-full", {"p-invalid": isFormFieldInvalid("deadline")})}
-                        />{getFormErrorMessage("deadline")}
-                    </div>
-                    <div className="field">
-                        <label htmlFor="assignedBy">Atayan</label>
-                        <Dropdown id="assignedBy" value={formik.values?.assignedBy} options={fetchPeople.data}
-                                  required
-                                  optionLabel="label"
-                                  className={classNames("w-full", {"p-invalid": isFormFieldInvalid("assignedBy")})}
-                                  filter onChange={formik.handleChange}/>
-                        {getFormErrorMessage("assignedBy")}
-                    </div>
-                    <div className="field">
-                        <label htmlFor="assignedTo">Atanan</label>
-                        <Dropdown id="assignedTo" value={formik.values?.assignedTo} options={fetchPeople.data}
-                                  required
-                                  optionLabel="label"
-                                  className={classNames("w-full", {"p-invalid": isFormFieldInvalid("assignedTo")})}
-                                  filter onChange={formik.handleChange}/>
-                        {getFormErrorMessage("assignedTo")}
-                    </div>
-                    <div className="field">
-                        <label htmlFor="durum">Durumu</label>
-                        <Dropdown id="durum" value={formik.values?.durum} options={fetchDurumlar.data} required
-                                  optionLabel="label"
-                                  className={classNames("w-full", {"p-invalid": isFormFieldInvalid("durum")})}
-                                  onChange={formik.handleChange}/>
-                        {getFormErrorMessage("durum")}
-                    </div>
-                </Dialog>
+                <NewTaskDialog isVisible={dialogVisible} hideDialog={hideDialog}/>
+
             </div>
         </div>
     );

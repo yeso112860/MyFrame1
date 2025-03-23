@@ -15,7 +15,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
     public Optional<String> getCurrentAuditor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (!(authentication instanceof AnonymousAuthenticationToken))
+        if ( authentication != null && !(authentication instanceof AnonymousAuthenticationToken))
             if(authentication.getPrincipal() instanceof DefaultOidcUser   ){
                 return Optional.ofNullable( ((DefaultOidcUser) authentication.getPrincipal()).getClaim("preferred_username"));
             }else if(authentication instanceof UsernamePasswordAuthenticationToken ){

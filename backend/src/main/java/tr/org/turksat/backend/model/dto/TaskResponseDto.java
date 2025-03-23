@@ -15,8 +15,8 @@ import java.time.ZonedDateTime;
 public class TaskResponseDto  extends BaseDto {
     private String title;
     private String description;
-    private ZonedDateTime deadline;
+    private ZonedDateTime dueDate;
     private ParameterDto assignedBy;
     private ParameterDto assignedTo;
-    private ParameterDto durum;
+    private ParameterDto status;
 }

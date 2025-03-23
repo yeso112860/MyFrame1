@@ -34,7 +34,7 @@ public class SampleController {
     }
 
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/durumlar")
+    @GetMapping("/statuses")
     public ResponseEntity<List<ParameterDto>> getStatuses() {
         return new ResponseEntity<>(sampleService.getStatusParameters(), HttpStatus.OK);
     }
