@@ -29,7 +29,7 @@ export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
         assignedBy: Yup.object().required("Görevi Atayan Zorunlu alan"),
         assignedTo: Yup.object().required("Görev Atanan Zorunlu alan"),
         status: Yup.object().required("Görev Durumu Zorunlu alan"),
-        //statusu: Yup.number().typeError("Servis Versiyonu Alanı sadece sayı olmalıdır"),
+        //status: Yup.number().typeError("Servis Versiyonu Alanı sadece sayı olmalıdır"),
     });
     const formik = useFormik({
         initialValues: new Task(),
@@ -98,11 +98,11 @@ export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
         id="taskDialog"
         key="taskDialog"
         footer={taskDialogFooter}
-        visible={isVisible}
+        visible={isVisible} style={{width:"40rem"}}
         onHide={onHideDialog}>
         <div className="field">
-            <label>Görev Önceliği</label>
-            <SelectButton
+            <label htmlFor="priority">Görev Önceliği</label>
+            <SelectButton id="priority"
                 value={formik.values?.priority}
                 onChange={(e) => {
                     console.log(e.value);formik.setFieldValue('priority', e.target.value);}}
@@ -110,6 +110,7 @@ export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
                 optionLabel="name"
                 optionValue="code"
             />
+            {getFormErrorMessage("priority")}
         </div>
         <div className="field">
             <label htmlFor="title">Tanımı</label>
