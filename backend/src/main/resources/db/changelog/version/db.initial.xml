@@ -36,9 +36,9 @@
             <column name="image_url" type="text"/>
             <column name="bio" type="text"/>
         </createTable>
-        <createTable tableName="param_durum">
+        <createTable tableName="param_status">
             <column name="id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_param_durum"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_param_status"/>
             </column>
             <column name="olusturulma_tarihi" type="DATETIME">
                 <constraints nullable="false"/>
@@ -80,13 +80,19 @@
             <column name="title" type="text">
                 <constraints nullable="false"/>
             </column>
+            <column name="priority" type="text"/>
+            <column name="progress" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comments" type="json"/>
+            <column name="history" type="json"/>
             <column name="description" type="text"/>
-            <column name="deadline" type="datetime">
+            <column name="due_date" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="assigned_by_id" type="UUID"/>
             <column name="assigned_to_id" type="UUID"/>
-            <column name="durum_id" type="UUID"/>
+            <column name="status_id" type="UUID"/>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="assigned_by_id" baseTableName="task"
                                  constraintName="FK_TASK_ON_ASSIGNEDBY" referencedColumnNames="id"
@@ -94,12 +100,12 @@
         <addForeignKeyConstraint baseColumnNames="assigned_to_id" baseTableName="task"
                                  constraintName="FK_TASK_ON_ASSIGNEDTO" referencedColumnNames="id"
                                  referencedTableName="kullanici"/>
-        <addForeignKeyConstraint baseColumnNames="durum_id" baseTableName="task" constraintName="FK_TASK_ON_DURUM"
-                                 referencedColumnNames="id" referencedTableName="param_durum"/>
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="task" constraintName="FK_TASK_ON_STATUS"
+                                 referencedColumnNames="id" referencedTableName="param_status"/>
 
     </changeSet>
     <changeSet id="1742139962611-1" author="yasiravcibasi (generated)">
-        <insert tableName="param_durum">
+        <insert tableName="param_status">
             <column name="id" value="d9c2e676-6978-41f7-864f-80f93e79a2ca"/>
             <column name="label" value="Sahipsiz"/>
             <column name="olusturulma_tarihi" value="now()"/>
@@ -107,7 +113,7 @@
             <column name="versiyon" value="1"/>
             <column name="silindi" value="false"/>
         </insert>
-        <insert tableName="param_durum">
+        <insert tableName="param_status">
             <column name="id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
             <column name="label" value="Atandı"/>
             <column name="olusturulma_tarihi" value="now()"/>
@@ -115,7 +121,7 @@
             <column name="versiyon" value="1"/>
             <column name="silindi" value="false"/>
         </insert>
-        <insert tableName="param_durum">
+        <insert tableName="param_status">
             <column name="id" value="080ac55a-a871-4e4d-80d7-7dab8ef91f11"/>
             <column name="label" value="Devam Ediyor"/>
             <column name="olusturulma_tarihi" value="now()"/>
@@ -123,7 +129,7 @@
             <column name="versiyon" value="1"/>
             <column name="silindi" value="false"/>
         </insert>
-        <insert tableName="param_durum">
+        <insert tableName="param_status">
             <column name="id" value="725232d7-f3f7-43ba-8c6c-ca70dd68657e"/>
             <column name="label" value="Tamamlandı"/>
             <column name="olusturulma_tarihi" value="now()"/>
@@ -131,7 +137,7 @@
             <column name="versiyon" value="1"/>
             <column name="silindi" value="false"/>
         </insert>
-        <insert tableName="param_durum">
+        <insert tableName="param_status">
             <column name="id" value="25899fa1-3adc-4311-b112-3326c5c37524"/>
             <column name="label" value="İptal"/>
             <column name="olusturulma_tarihi" value="now()"/>
@@ -165,10 +171,12 @@
             <column name="id" value="e6b98d95-a7b0-46c5-bb18-5a01c17383d4"/>
             <column name="assigned_by_id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39"/>
             <column name="assigned_to_id" value="313f43ab-5add-4985-8aa2-20cdd2bca696"/>
-            <column name="durum_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
+            <column name="status_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
             <column name="title" value="El-Ikdu'l-manzum fi Zikri Efazıli'r-Rum - Ali b. Bali'nin Şaka'ik Zeyli"/>
             <column name="description" value="CİLTLİ inceleme, eleştirmeli metin, çeviri 723 sayfa. 17x24 cm"/>
-            <column name="deadline" value="2025-04-01 14:00:00"/>
+            <column name="due_date" value="2025-04-01 14:00:00"/>
+            <column name="priority" value="HIGH"/>
+            <column name="progress" value="0"/>
             <column name="olusturulma_tarihi" value="now()"/>
             <column name="olusturan_kisi" value="yasiravcibasi"/>
             <column name="versiyon" value="1"/>
@@ -178,11 +186,13 @@
             <column name="id" value="0e8ef914-ba51-4e41-a084-52c09e3c2ddc"/>
             <column name="assigned_by_id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39"/>
             <column name="assigned_to_id" value="313f43ab-5add-4985-8aa2-20cdd2bca696"/>
-            <column name="durum_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
+            <column name="status_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
             <column name="title" value="Muhibbi Divanı : kendi hattıyla"/>
+            <column name="priority" value="LOW"/>
+            <column name="progress" value="0"/>
             <column name="description"
                     value="Divan şiiri--İnceleme Kanuni Sultan Süleyman, 1494-1566 Türkiye Yazma Eserler Kurumu Başkanlığı Yayınları ; 23. Edebiyat ve Sanat Serisi ; 7."/>
-            <column name="deadline" value="2025-04-01 15:00:00"/>
+            <column name="due_date" value="2025-04-01 15:00:00"/>
             <column name="olusturulma_tarihi" value="now()"/>
             <column name="olusturan_kisi" value="yasiravcibasi"/>
             <column name="versiyon" value="1"/>
@@ -192,11 +202,13 @@
             <column name="id" value="9f0f8ea7-f752-4e4c-a2e9-a606baf8b97b"/>
             <column name="assigned_by_id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39"/>
             <column name="assigned_to_id" value="313f43ab-5add-4985-8aa2-20cdd2bca696"/>
-            <column name="durum_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
+            <column name="status_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
             <column name="title" value="Silme testi"/>
+            <column name="priority" value="LOW"/>
+            <column name="progress" value="0"/>
             <column name="description"
                     value="Bunu görmememiz lazım"/>
-            <column name="deadline" value="2025-04-01 15:00:00"/>
+            <column name="due_date" value="2025-04-01 15:00:00"/>
             <column name="olusturulma_tarihi" value="now()"/>
             <column name="olusturan_kisi" value="yasiravcibasi"/>
             <column name="versiyon" value="1"/>

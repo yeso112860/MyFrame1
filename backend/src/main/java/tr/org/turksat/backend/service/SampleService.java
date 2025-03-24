@@ -33,6 +33,8 @@ public class SampleService {
     private ExporterService exporterService;
 
     public List<TaskDto> getTasks() {
+        List<Task> all = taskRepository.findAll();
+        System.out.println(all);
         List<TaskDto> dtoList = taskRepository.findAllDto();
         return dtoList;
     }

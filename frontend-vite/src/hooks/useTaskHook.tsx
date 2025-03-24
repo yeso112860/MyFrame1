@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {keepPreviousData, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {taskApi} from "~/service/TaskService.ts";
 import {defaultStaleTime} from "~/utilities/constants";
-import {Task} from "~/utilities/types";
+import Task from "~/utilities/types/models";
 import {useToast} from "~/store/toastContext.tsx";
 
 export function useTaskHook() {
@@ -56,10 +56,10 @@ export function useTaskHook() {
         },
     });
 
-    const fetchDurumlar = useQuery({
+    const fetchStatuses = useQuery({
         enabled: fetch,
-        queryKey: ["Durumlar"],
-        queryFn: async () => taskApi.getDurumlar(),
+        queryKey: ["Statuses"],
+        queryFn: async () => taskApi.getStatuses(),
         placeholderData: keepPreviousData,
         staleTime: defaultStaleTime,
     });
@@ -83,7 +83,7 @@ export function useTaskHook() {
         }
     }, [fetch]);
     return {
-        fetchDurumlar,
+        fetchStatuses,
         fetchTasks,
         newTask,
         deleteTask,

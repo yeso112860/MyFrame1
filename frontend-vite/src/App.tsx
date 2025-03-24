@@ -1,9 +1,32 @@
-import { Route, Routes } from 'react-router-dom';
-import Home from '~/routes/_layout/Home';
-import Playground from '/routes/_layout/Playground';
-import NotFound from './routes/_layout/NotFound';
 import { useEffect, useState } from 'react';
 import { hasAuthParams, useAuth } from 'react-oidc-context';
+import {addLocale, locale, PrimeReactProvider} from "primereact/api";
+import {ToastProvider} from "~/store/toastContext.tsx";
+import {LoadingQueueProvider} from "~/store/loadingContext.tsx";
+import {LayoutProvider} from "~/store/layoutcontext.tsx";
+import {SelectedClientProvider} from "~/store/selectedClientContext.tsx";
+import {RouterContextProvider} from "~/store/routerContext.tsx";
+import masterContext from "~/store/masterContext.tsx";
+import {createRouter, RouterProvider} from "@tanstack/react-router";
+import {routeTree} from "~/routeTree.gen.ts";
+import NotFound from "~/routes/_no-layout/NotFound.tsx";
+import primeTr from "./utilities/translations/prime/tr.json";
+
+// Set up a Router instance
+const router = createRouter({
+    routeTree,
+    defaultNotFoundComponent: () => {
+        return (
+            <NotFound/>
+        )
+    },
+});
+// Register things for typesafety
+declare module "@tanstack/react-router" {
+    interface Register {
+        router: typeof router;
+    }
+}
 
 const App = () => {
   const auth = useAuth();
@@ -57,14 +80,38 @@ const App = () => {
     );
   }
 
+
+
+
+    addLocale("tr", primeTr["tr"]);
+    locale("tr");
+
+    const primeConfig = {
+        locale: "tr",
+        pt: {
+            card: {
+                content: {
+                    className: "p-0",
+                },
+            },
+        },
+    };
+
   return (
-    <Routes>
-      <Route path="/">
-        <Route index element={<Home />}></Route>
-        <Route path="/playground" element={<Playground />}></Route>
-        <Route path="*" element={<NotFound />}></Route>
-      </Route>
-    </Routes>
+      <PrimeReactProvider value={primeConfig}>
+          <ToastProvider>
+              <LoadingQueueProvider>
+                  <LayoutProvider>
+                      <SelectedClientProvider>
+                          <RouterContextProvider router={router} context={masterContext}>
+                              <RouterProvider router={router} context={masterContext}/>
+                          </RouterContextProvider>
+                      </SelectedClientProvider>
+                  </LayoutProvider>
+              </LoadingQueueProvider>
+          </ToastProvider>
+      </PrimeReactProvider>
+
   );
 };
 

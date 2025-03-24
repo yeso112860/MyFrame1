@@ -6,25 +6,21 @@ import AppFooter from "../components/ui/layout/AppFooter.tsx";
 import {classNames} from "primereact/utils";
 import {LayoutContext} from "../store/layoutcontext.tsx";
 import {useEventListener, useUnmountEffect} from "primereact/hooks";
-import {PrimeReactContext} from "primereact/api";
 import AppConfig from "~/components/ui/layout/AppConfig.tsx";
 import AppMenu from "~/components/ui/layout/AppMenu.tsx";
 import {useAuth} from "react-oidc-context";
 import useMasterContext from "~/store/masterContext.tsx";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 
 
-function AppSidebar() {
-    return <AppMenu/>;
-}
+const AppSidebar = () => <AppMenu/>
 
 const LayoutComponent = () => {
     const auth = useAuth();
     const navigate = useNavigate();
     const masterContext = useMasterContext();
     const {layoutConfig, layoutState, setLayoutState} = useContext(LayoutContext);
-    const {setRipple} = useContext(PrimeReactContext);
     const topbarRef = useRef<AppTopbarRef>(null);
     const sidebarRef = useRef<HTMLDivElement>(null);
     const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] = useEventListener({
@@ -103,11 +99,10 @@ const LayoutComponent = () => {
     };
 
     useEffect(() => {
-        if (layoutState.overlayMenuActive || layoutState.staticMenuMobileActive) {
+        if (layoutState.overlayMenuActive || layoutState.staticMenuMobileActive)
             bindMenuOutsideClickListener();
-        }
 
-        layoutState.staticMenuMobileActive && blockBodyScroll();
+        if (layoutState.staticMenuMobileActive) blockBodyScroll();
     }, [layoutState.overlayMenuActive, layoutState.staticMenuMobileActive]);
 
     useEffect(() => {
@@ -134,9 +129,7 @@ const LayoutComponent = () => {
     useEffect(() => {
         if (!auth.isLoading) {
             if (auth?.user?.access_token) {
-                masterContext.setResourceAccess(
-                    jwtDecode(auth?.user?.access_token)?.resource_access,
-                );
+                masterContext.setResourceAccess(jwtDecode(auth?.user?.access_token)?.resource_access);
             }
 
             if (auth?.isAuthenticated) {
@@ -155,12 +148,12 @@ const LayoutComponent = () => {
                         return response;
                     },
                     function (error) {
-                        error.response.status === 401 && navigate({ to: "/logout" });
+                        error.response.status === 401 && navigate({to: "/logout"});
                         return Promise.reject(error);
                     },
                 );
             } else {
-                navigate({ to: "/login" });
+                navigate({to: "/login"});
             }
         }
     }, [auth.isLoading]);
