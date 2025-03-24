@@ -9,11 +9,21 @@ import tr.org.turksat.backend.model.TaskPriority;
 import tr.org.turksat.backend.repository.TaskRepository;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
-//@Component
+@Component
 public class TestTask implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
+        List<Task> all = taskRepository.findAll();
+        for (Task task : all) {
+            Comment e = new Comment();
+            e.setDate(ZonedDateTime.now());
+            e.setUser("Test User");
+            e.setContent("This is a test task");
+            task.setComments(List.of(e));
+            taskRepository.save(task);
+        }
         Task t = new Task();
         t.setTitle("Test Task");
         t.setDescription("This is a test task");

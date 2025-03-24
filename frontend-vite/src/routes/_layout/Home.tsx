@@ -14,12 +14,13 @@ import {NewTaskDialog} from "~/components/ui/dialog/NewTaskDialog.tsx";
 import {createFileRoute} from "@tanstack/react-router";
 import "primeflex/themes/primeone-light.css"
 import {EditTaskDialog} from "~/components/ui/dialog/EditTaskDialog.tsx";
+import { OverlayPanel } from "primereact/overlaypanel";
 
 const Home = () => {
     const [newDialogVisible, setNewDialogVisible] = useState(false);
     const [editDialogVisible, setEditDialogVisible] = useState(false);
     const [confirmVisible, setConfirmVisible] = useState(false);
-    const [task, setTask] = useState<Task>(new Task());
+    const [task, setTask] = useState<Task | null>(null);
     const {fetchTasks, deleteTask} = useTaskHook();
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef<DataTable<Task[]>>(null);
@@ -30,6 +31,7 @@ const Home = () => {
     }
 
     function hideEditDialog() {
+        setTask(null); // to reset datatable selection. otherwise it will hold invalidated state
         setEditDialogVisible(false);
     }
 
@@ -112,6 +114,33 @@ const Home = () => {
             return format(new Date(_task.dueDate), "dd.MM.yyyy HH:mm");
         return format(_task.dueDate, "dd.MM.yyyy HH:mm");
     }
+    const historyColumnBody = (_task: Task) => {
+        const op = useRef(null);
+        return <>
+            <Button link label={_task.comments.length +  ' değişiklik'}
+                    onClick={(e)=> op.current.toggle(e)}
+                    icon="pi pi-history"/>
+            <OverlayPanel ref={op}>
+                <ul>
+                {_task.comments.map((comment, index) => (
+                    <li key={index}>
+                        <div className="flex-shrink-0 w-24 text-[9px] text-gray-500">{format(comment.date, "dd.MM.yyyy HH:mm")}</div>
+                        <div className="flex-1">
+                            <div className="mt-1 text-[10px] text-gray-500 flex items-center gap-1">
+                                <span>{comment.user}:</span>
+                            </div>
+                            {comment.content && (
+                                <div className="mt-1 text-[10px] text-gray-600">
+                                    {comment.content}
+                                </div>
+                            )}
+                        </div>
+                    </li>
+                ))}
+                </ul>
+            </OverlayPanel>
+        </>;
+    }
     return (
         <div className="grid crud-demo">
             <div className="grid crud-demo">
@@ -148,11 +177,13 @@ const Home = () => {
                             <Column field="assignedBy.label" header="Atayan"/>
                             <Column field="assignedTo.label" header="Atanan"/>
                             <Column field="status.label" header="Durumu"/>
+                            <Column field="history" header="Geçmiş" body={historyColumnBody}/>
                         </DataTable>
                     </div>
                 </div>
-                <NewTaskDialog isVisible={newDialogVisible} hideDialog={hideNewDialog}/>
-                <EditTaskDialog isVisible={editDialogVisible} hideDialog={hideEditDialog} task={task}/>
+                {newDialogVisible ? <NewTaskDialog isVisible={newDialogVisible} hideDialog={hideNewDialog}/> : null}
+                {editDialogVisible ?
+                    <EditTaskDialog isVisible={editDialogVisible} hideDialog={hideEditDialog} task={task}/> : null}
             </div>
         </div>
     );

@@ -3,50 +3,34 @@ export enum TaskPriority {
 }
 
 export class Task {
-    id?: string;
-    title?: string;
-    description?: string;
-    dueDate?: Date;
-    priority?: TaskPriority;
-    progress?: number;
+    id: string;
+    title: string;
+    description: string;
+    dueDate: Date;
+    priority: TaskPriority;
+    progress: number;
     assignedBy?: Parameter;
     assignedTo?: Parameter;
     status?: Parameter;
-    history?: TaskHistory[];
-    comments?: Comment[];
+    history: TaskHistory[];
+    comments: Comment[];
 
     constructor(id?: string, title?: string, description?: string, dueDate?: Date, priority?: TaskPriority,
                 progress?: number, assignedBy?: Parameter, assignedTo?: Parameter, status?: Parameter) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.dueDate = dueDate;
-        this.priority = priority;
-        this.progress = progress;
+        this.id = id || '';
+        this.title = title || '';
+        this.description = description || '';
+        this.dueDate = dueDate || new Date();
+        this.priority = priority || TaskPriority.Low;
+        this.progress = progress || 0;
         this.assignedBy = assignedBy;
         this.assignedTo = assignedTo;
         this.status = status;
+        this.history = [];
+        this.comments = [];
     }
 }
 
-/*
-export interface Task2 {
-    id: number;
-    title: string;
-    creator: Person;
-    assignee: Person;
-    status: TaskStatus;
-    type: TaskType;
-    progress: number;
-    startDate: string;
-    dueDate: string;
-    priority: 'low' | 'medium' | 'high';
-    description?: string;
-    history: TaskHistory[];
-    comments?: Comment[];
-    canDelete?: boolean;
-  }
-*/
 export class TaskHistory {
     date: Date = new Date();
     from?: string;

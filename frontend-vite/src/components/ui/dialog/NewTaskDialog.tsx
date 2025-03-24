@@ -48,8 +48,7 @@ export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
     })
 
     //validasyon hata mesajları
-    const isFormFieldInvalid = (name: string) =>
-        !!(formik.touched[name] && formik.errors[name]);
+    const isFormFieldInvalid = (name: string) => !!(formik.touched[name] && formik.errors[name]);
 
     const getFormErrorMessage = (name: string) => {
         return isFormFieldInvalid(name) ? (
@@ -59,12 +58,15 @@ export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
         );
     };
 
-    const selectButtonValues1: {name:string,code:TaskPriority}[] = [
+    const selectButtonValues1: { name: string, code: TaskPriority }[] = [
         {name: "Düşük", code: TaskPriority.Low},
         {name: "Orta", code: TaskPriority.Medium},
         {name: "Yüksek", code: TaskPriority.High},
     ];
 
+    const onHideDialog = () => {
+        hideDialog();
+    }
 
     const taskDialogFooter = (
         <>
@@ -72,9 +74,7 @@ export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
                 label="İptal"
                 icon="pi pi-times"
                 className="p-button-text"
-                onClick={() => {
-                    onHideDialog()
-                }}
+                onClick={onHideDialog}
             />
             <Button
                 label="Kaydet"
@@ -89,26 +89,22 @@ export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
         </>
     );
 
-    const onHideDialog = () => {
-        hideDialog();
-        formik.resetForm();
-    }
-
     return <Dialog
         id="taskDialog"
         key="taskDialog"
         footer={taskDialogFooter}
-        visible={isVisible} style={{width:"40rem"}}
+        visible={isVisible} style={{width: "40rem"}}
         onHide={onHideDialog}>
         <div className="field">
             <label htmlFor="priority">Görev Önceliği</label>
             <SelectButton id="priority"
-                value={formik.values?.priority}
-                onChange={(e) => {
-                    console.log(e.value);formik.setFieldValue('priority', e.target.value);}}
-                options={selectButtonValues1}
-                optionLabel="name"
-                optionValue="code"
+                          value={formik.values?.priority}
+                          onChange={(e) => {
+                              formik.setFieldValue('priority', e.target.value);
+                          }}
+                          options={selectButtonValues1}
+                          optionLabel="name"
+                          optionValue="code"
             />
             {getFormErrorMessage("priority")}
         </div>
