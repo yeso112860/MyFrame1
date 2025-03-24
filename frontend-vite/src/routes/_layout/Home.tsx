@@ -117,21 +117,21 @@ const Home = () => {
     const historyColumnBody = (_task: Task) => {
         const op = useRef(null);
         return <>
-            <Button link label={_task.comments.length +  ' değişiklik'}
+            <Button link label={_task.history.length +  ' değişiklik'}
                     onClick={(e)=> op.current.toggle(e)}
-                    icon="pi pi-history"/>
+                    icon="pi pi-history" disabled={!_task.history || _task.history.length === 0}/>
             <OverlayPanel ref={op}>
                 <ul>
-                {_task.comments.map((comment, index) => (
+                {_task.history.map((comment, index) => (
                     <li key={index}>
                         <div className="flex-shrink-0 w-24 text-[9px] text-gray-500">{format(comment.date, "dd.MM.yyyy HH:mm")}</div>
                         <div className="flex-1">
                             <div className="mt-1 text-[10px] text-gray-500 flex items-center gap-1">
-                                <span>{comment.user}:</span>
+                                <span>{comment.by}:</span>
                             </div>
-                            {comment.content && (
+                            {comment.note && (
                                 <div className="mt-1 text-[10px] text-gray-600">
-                                    {comment.content}
+                                    {comment.note}
                                 </div>
                             )}
                         </div>

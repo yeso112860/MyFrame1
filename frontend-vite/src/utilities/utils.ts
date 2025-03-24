@@ -1,11 +1,3 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { dateFormatterBackendToFronted } from "./formatter.ts";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
 export function changeTheme() {
   const theme = localStorage.getItem("theme") || "lara-light-indigo";
   const linkElement = document.createElement("link");

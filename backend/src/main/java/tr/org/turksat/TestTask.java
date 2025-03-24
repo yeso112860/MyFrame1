@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import tr.org.turksat.backend.model.Comment;
 import tr.org.turksat.backend.model.Task;
+import tr.org.turksat.backend.model.TaskHistory;
 import tr.org.turksat.backend.model.TaskPriority;
 import tr.org.turksat.backend.repository.TaskRepository;
 
@@ -17,24 +18,13 @@ public class TestTask implements CommandLineRunner {
     public void run(String... args) throws Exception {
         List<Task> all = taskRepository.findAll();
         for (Task task : all) {
-            Comment e = new Comment();
-            e.setDate(ZonedDateTime.now());
-            e.setUser("Test User");
-            e.setContent("This is a test task");
-            task.setComments(List.of(e));
+            TaskHistory taskHistory = new TaskHistory();
+            taskHistory.setBy("Sytem");
+            taskHistory.setDate(ZonedDateTime.now());
+            taskHistory.setNote(task.getAssignedBy().getFirstName() + " " + task.getAssignedBy().getLastName() + " tarafından oluşturuldu");
+            task.setHistory(List.of(taskHistory));
             taskRepository.save(task);
         }
-        Task t = new Task();
-        t.setTitle("Test Task");
-        t.setDescription("This is a test task");
-        t.setDueDate(ZonedDateTime.now());
-        t.setPriority(TaskPriority.LOW);
-        Comment e = new Comment();
-        e.setDate(ZonedDateTime.now());
-        e.setUser("Test User");
-        e.setContent("This is a test task");
-        t.getComments().add(e);
-        taskRepository.save(t);
     }
 
     @Autowired
