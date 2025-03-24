@@ -12,8 +12,12 @@ export class Task {
     assignedBy?: Parameter;
     assignedTo?: Parameter;
     status?: Parameter;
-    history: TaskHistory[];
-    comments: Comment[];
+    private _history: TaskHistory[] = [];
+    private _comments: Comment[] = [];
+    public get history() {return this._history;}
+    public set history(history: TaskHistory[]) {this._history = history;}
+    public get comments() {return this._comments;}
+    public set comments(comments: Comment[]) {this._comments = comments;}
 
     constructor(id?: string, title?: string, description?: string, dueDate?: Date, priority?: TaskPriority,
                 progress?: number, assignedBy?: Parameter, assignedTo?: Parameter, status?: Parameter) {
@@ -26,8 +30,6 @@ export class Task {
         this.assignedBy = assignedBy;
         this.assignedTo = assignedTo;
         this.status = status;
-        this.history = [];
-        this.comments = [];
     }
 }
 
