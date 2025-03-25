@@ -226,16 +226,6 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                     />{getFormErrorMessage("title")}
                 </div>
                 <div className="field">
-                    <label htmlFor="description">Açıklaması</label>
-                    <InputTextarea
-                        id="description"
-                        value={formik.values?.description}
-                        onChange={formik.handleChange}
-                        required
-                        className={classNames("w-full", {"p-invalid": isFormFieldInvalid("description")})}
-                    />{getFormErrorMessage("description")}
-                </div>
-                <div className="field">
                     <label>Teslim Tarihi</label>
                     <Calendar
                         id="dueDate" showTime
