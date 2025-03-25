@@ -25,7 +25,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 //@SQLDelete(sql = "UPDATE kullanici SET " + EntityConstant.DURUM + " = '" + EntityConstant.DURUM_SILINDI + "' , " + EntityConstant.VERSION + " = versiyon + 1 " + " WHERE " + EntityConstant.ID
 //        + " = ? AND " + EntityConstant.VERSION + " <= ?")
-@SQLRestriction(EntityConstant.DURUM + " <> " + EntityConstant.DURUM_SILINDI)
+//@SQLRestriction(EntityConstant.DURUM + " <> " + EntityConstant.DURUM_SILINDI)
 @Table(name = "task")
 public class Task extends BaseEntity {
     private @NotNull

@@ -13,8 +13,8 @@ import {Calendar} from "primereact/calendar";
 import {Dropdown} from "primereact/dropdown";
 import {SelectButton} from "primereact/selectbutton";
 import {Slider} from "primereact/slider";
-import {TabPanel, TabView} from "primereact/tabview";
 import {format} from "date-fns";
+import {TabPanel, TabView} from "primereact/tabview";
 
 interface TaskDialogProps {
     isVisible: boolean
@@ -25,7 +25,6 @@ interface TaskDialogProps {
 export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) => {
     const {addLoading, removeLoading} = useContext(LoadingQueueContext);
     const {fetchStatuses, newTask, fetchPeople} = useTaskHook();
-    const [activeTab, setActiveTab] = useState<'activity' | 'comments'>('activity');
     const [newComment, setNewComment] = useState<string>('');
     const validationSchema = Yup.object({
         priority: Yup.string().required("Görev Önceliği Zorunlu alan"),
@@ -38,7 +37,11 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
         //status: Yup.number().typeError("Servis Versiyonu Alanı sadece sayı olmalıdır"),
     });
     const formik = useFormik({
-        initialValues: {...task, dueDate: (typeof task.dueDate === 'string' ? new Date(task.dueDate) : task.dueDate)},
+        initialValues: {...task,
+            dueDate: (typeof task.dueDate === 'string' ? new Date(task.dueDate) : task.dueDate),
+            history: task.history ? task.history : [],
+            comments: task.comments ? task.comments : []
+        },
         validateOnMount: true,
         validationSchema: validationSchema || Yup.object({}),
         onSubmit: async (data: Task) => {
@@ -116,82 +119,57 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                         className={classNames("w-full", {"p-invalid": isFormFieldInvalid("description")})}
                     />{getFormErrorMessage("description")}
                 </div>
-                {/* Tabs */}
-                <div className="border-b mb-6">
-                    <div className="flex gap-6">
-                        <button
-                            onClick={() => setActiveTab('activity')}
-                            className={`pb-3 text-sm font-medium border-b-2 ${
-                                activeTab === 'activity'
-                                    ? 'border-blue-500 text-blue-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                            }`}
-                        >
-                            Faaliyet Akışı
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('comments')}
-                            className={`pb-3 text-sm font-medium border-b-2 ${
-                                activeTab === 'comments'
-                                    ? 'border-blue-500 text-blue-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                            }`}
-                        >
-                            Yorumlar
-                        </button>
-                    </div>
-                </div>
-                {activeTab === 'activity' && (
-                    <div className="space-y-4">
-                        {formik.values.history && formik.values.history.map((record, index) => (
-                            <div key={index} className="flex gap-3">
-                                <div className="flex-shrink-0">
-                                    <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
-                                        <i className="pi pi-history"/>
-                                    </div>
-                                </div>
-                                <div className="flex-1">
-                                    <div className="flex items-start justify-between">
-                                        <div className="text-xs">
-                                            <span className="font-medium text-gray-900">{record.by}</span>
+                <TabView>
+                    <TabPanel header="Faaliyet Akışı">
+                        <div className="space-y-4">
+                            {formik.values.history.map((record, index) => (
+                                <div key={index} className="flex gap-3">
+                                    <div className="flex-shrink-0">
+                                        <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
+                                            <i className="pi pi-history"/>
                                         </div>
-                                        <span className="text-[11px] text-gray-500">
-                              {format(record.date,"dd.MM.yyyy HH:mm")}
-                            </span>
                                     </div>
-                                    {record.note && (
-                                        <p className="mt-1.5 text-xs text-gray-600 bg-gray-50 p-2 rounded-lg">
-                                            {record.note}
-                                        </p>
-                                    )}
+                                    <div className="flex-1">
+                                        <div className="flex items-start justify-between">
+                                            <div className="text-xs">
+                                                <span className="font-medium text-gray-900">{record.by}</span>
+                                            </div>
+                                            <span className="text-[11px] text-gray-500">
+                              {format(record.date, "dd.MM.yyyy HH:mm")}
+                            </span>
+                                        </div>
+                                        {record.note && (
+                                            <p className="mt-1.5 text-xs text-gray-600 bg-gray-50 p-2 rounded-lg">
+                                                {record.note}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {/* Comments */}
-                {activeTab === 'comments' && (
-                    <div className="space-y-6">
-                        {formik.values.comments && formik.values.comments?.map((comment, index) => (
-                            <div key={index} className="flex gap-4">
-                                <div className="flex-1">
-                                    <div className="flex items-start justify-between">
-                                        <div>
+                            ))}
+                        </div>
+                    </TabPanel>
+                    <TabPanel header="Yorumlar">
+                        <div className="space-y-6">
+                            {formik.values.comments?.map((comment, index) => (
+                                <div key={index} className="flex gap-4">
+                                    <div className="flex-1">
+                                        <div className="flex items-start justify-between">
+                                            <div>
                               <span className="font-medium text-gray-900">
                                 {comment.user}
                               </span>
-                                            <span className="text-xs text-gray-500 ml-2">
-                                {format(comment.date,'dd.MM.yyyy HH:mm')}
+                                                <span className="text-xs text-gray-500 ml-2">
+                                {format(comment.date, 'dd.MM.yyyy HH:mm')}
                               </span>
+                                            </div>
                                         </div>
+                                        <p className="mt-2 text-gray-600">{comment.content}</p>
                                     </div>
-                                    <p className="mt-2 text-gray-600">{comment.content}</p>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                            ))}
+                        </div>
+                    </TabPanel>
+                </TabView>
 
                 {/* Comment Input*/}
                 <div className="mt-6 pt-6 border-t">
@@ -206,10 +184,11 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                       />
                             <div className="mt-2 flex justify-between items-center">
                                 <Button
-                                    onClick={() =>{
-                                        formik.setFieldValue("comments",[...formik.values.comments,new Comment("System","asddsadsa")],false);
-                                        setNewComment("");}
-                                        }
+                                    onClick={() => {
+                                        formik.setFieldValue("comments", [...formik.values.comments, new Comment("System", newComment)], false);
+                                        setNewComment("");
+                                    }
+                                    }
                                     disabled={!newComment.trim()}
                                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
@@ -222,7 +201,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
             </div>
             <div className="col-4">
                 <div className="field">
-                    <label htmlFor="priority">Görev Önceliği</label>
+                    <label>Görev Önceliği</label>
                     <SelectButton id="priority"
                                   value={formik.values?.priority}
                                   onChange={(e) => {
@@ -257,7 +236,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                     />{getFormErrorMessage("description")}
                 </div>
                 <div className="field">
-                    <label htmlFor="dueDate">Teslim Tarihi</label>
+                    <label>Teslim Tarihi</label>
                     <Calendar
                         id="dueDate" showTime
                         value={formik.values?.dueDate}
@@ -267,12 +246,12 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                     />{getFormErrorMessage("dueDate")}
                 </div>
                 <div className="field">
-                    <label htmlFor="progress">İlerleme (%{formik.values.progress})</label>
+                    <label>İlerleme (%{formik.values.progress})</label>
                     <Slider id="progress" value={formik.values.progress}
                             onChange={(e) => formik.setFieldValue("progress", e.value, false)}/>
                 </div>
                 <div className="field">
-                    <label htmlFor="assignedTo">Atanan</label>
+                    <label>Atanan</label>
                     <Dropdown id="assignedTo" value={formik.values?.assignedTo} options={fetchPeople.data}
                               required
                               optionLabel="label"
@@ -281,7 +260,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                     {getFormErrorMessage("assignedTo")}
                 </div>
                 <div className="field">
-                    <label htmlFor="status">Durumu</label>
+                    <label>Durumu</label>
                     <Dropdown id="status" value={formik.values?.status} options={fetchStatuses.data} required
                               optionLabel="label"
                               className={classNames("w-full", {"p-invalid": isFormFieldInvalid("status")})}
