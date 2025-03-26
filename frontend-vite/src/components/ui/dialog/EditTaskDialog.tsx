@@ -107,7 +107,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
         footer={taskDialogFooter}
         visible={isVisible} style={{width: "75rem"}}
         onHide={onHideDialog}>
-        <div className="grid">
+        <div className="grid" aria-disabled={true}>
             <div className="col-8">
                 <div>
                     <label htmlFor="description">Açıklaması</label>
