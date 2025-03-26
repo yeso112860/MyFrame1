@@ -22,6 +22,7 @@ import {AvatarGroup} from "primereact/avatargroup";
 const Home = () => {
     const [newDialogVisible, setNewDialogVisible] = useState(false);
     const [editDialogVisible, setEditDialogVisible] = useState(false);
+    const [dialogDisabled, setDialogDisabled] = useState(false);
     const [confirmVisible, setConfirmVisible] = useState(false);
     const [task, setTask] = useState<Task | null>(null);
     const {fetchTasks, deleteTask} = useTaskHook();
@@ -57,7 +58,7 @@ const Home = () => {
         );
     };
     const items = [
-        {label: 'Görüntüle', icon: 'pi pi-eye', command: () => editTask()},
+        {label: 'Görüntüle', icon: 'pi pi-eye', command: () => viewTask()},
         {label: 'Düzenle', icon: 'pi pi-pencil', command: () => editTask()},
         {label: 'Sil', icon: 'pi pi-trash', command: () => setConfirmVisible(true)}
     ];
@@ -69,6 +70,11 @@ const Home = () => {
     };
     const editTask = () => {
         setEditDialogVisible(true);
+        setDialogDisabled(false);
+    };
+    const viewTask = () => {
+        setEditDialogVisible(true);
+        setDialogDisabled(true);
     };
     const openNew = () => {
         setNewDialogVisible(true);
@@ -193,7 +199,7 @@ const Home = () => {
                 </div>
                 {newDialogVisible ? <NewTaskDialog isVisible={newDialogVisible} hideDialog={hideNewDialog}/> : null}
                 {editDialogVisible ?
-                    <EditTaskDialog isVisible={editDialogVisible} hideDialog={hideEditDialog} task={task}/> : null}
+                    <EditTaskDialog isVisible={editDialogVisible} hideDialog={hideEditDialog} task={task} disabled={dialogDisabled}/> : null}
             </div>
         </div>
     );

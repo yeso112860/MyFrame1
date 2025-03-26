@@ -20,9 +20,10 @@ interface TaskDialogProps {
     isVisible: boolean
     task: Task
     hideDialog: () => void
+    disabled: boolean
 }
 
-export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) => {
+export const EditTaskDialog = ({isVisible, hideDialog, task, disabled=true}: TaskDialogProps) => {
     const {addLoading, removeLoading} = useContext(LoadingQueueContext);
     const {fetchStatuses, newTask, fetchPeople} = useTaskHook();
     const [newComment, setNewComment] = useState<string>('');
@@ -104,15 +105,16 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
     return <Dialog
         id="taskDialog"
         key="taskDialog"
-        footer={taskDialogFooter}
+        footer={disabled ? null :taskDialogFooter}
         visible={isVisible} style={{width: "75rem"}}
         onHide={onHideDialog}>
-        <div className="grid" aria-disabled={true}>
+        <div className="grid">
             <div className="col-8">
                 <div>
                     <label htmlFor="description">Açıklaması</label>
                     <InputTextarea
                         id="description"
+                        disabled={disabled}
                         value={formik.values?.description}
                         onChange={formik.handleChange}
                         required
@@ -172,7 +174,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                 </TabView>
 
                 {/* Comment Input*/}
-                <div className="mt-6 pt-6 border-t">
+                <div className="mt-6 pt-6 border-t" style={{visibility: disabled ? 'hidden' : ''}}>
                     <div className="flex items-start gap-4">
                         <div className="flex-1">
                       <textarea
@@ -208,6 +210,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                                       console.log(e.value);
                                       formik.setFieldValue('priority', e.target.value);
                                   }}
+                                  disabled={disabled}
                                   options={selectButtonValues1}
                                   optionLabel="name"
                                   optionValue="code"
@@ -220,6 +223,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                         id="title"
                         value={formik.values?.title}
                         onChange={formik.handleChange}
+                        disabled={disabled}
                         required
                         autoFocus
                         className={classNames("w-full", {"p-invalid": isFormFieldInvalid("title")})}
@@ -231,6 +235,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                         id="dueDate" showTime
                         value={formik.values?.dueDate}
                         onChange={formik.handleChange}
+                        disabled={disabled}
                         required locale="tr"
                         className={classNames("w-full", {"p-invalid": isFormFieldInvalid("dueDate")})}
                     />{getFormErrorMessage("dueDate")}
@@ -238,6 +243,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                 <div className="field">
                     <label>İlerleme (%{formik.values.progress})</label>
                     <Slider id="progress" value={formik.values.progress}
+                            disabled={disabled}
                             onChange={(e) => formik.setFieldValue("progress", e.value, false)}/>
                 </div>
                 <div className="field">
@@ -245,6 +251,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                     <Dropdown id="assignedTo" value={formik.values?.assignedTo} options={fetchPeople.data}
                               required
                               optionLabel="label"
+                              disabled={disabled}
                               className={classNames("w-full", {"p-invalid": isFormFieldInvalid("assignedTo")})}
                               filter onChange={formik.handleChange}/>
                     {getFormErrorMessage("assignedTo")}
@@ -253,6 +260,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task}: TaskDialogProps) =
                     <label>Durumu</label>
                     <Dropdown id="status" value={formik.values?.status} options={fetchStatuses.data} required
                               optionLabel="label"
+                              disabled={disabled}
                               className={classNames("w-full", {"p-invalid": isFormFieldInvalid("status")})}
                               onChange={formik.handleChange}/>
                     {getFormErrorMessage("status")}
