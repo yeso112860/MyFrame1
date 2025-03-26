@@ -14,7 +14,10 @@ import {NewTaskDialog} from "~/components/ui/dialog/NewTaskDialog.tsx";
 import {createFileRoute} from "@tanstack/react-router";
 import "primeflex/themes/primeone-light.css"
 import {EditTaskDialog} from "~/components/ui/dialog/EditTaskDialog.tsx";
-import { OverlayPanel } from "primereact/overlaypanel";
+import {OverlayPanel} from "primereact/overlaypanel";
+import {Tag} from "primereact/tag";
+import {Avatar} from "primereact/avatar";
+import {AvatarGroup} from "primereact/avatargroup";
 
 const Home = () => {
     const [newDialogVisible, setNewDialogVisible] = useState(false);
@@ -54,8 +57,8 @@ const Home = () => {
         );
     };
     const items = [
-        {label: 'Görüntüle', icon: 'pi pi-eye', command: () => editTask(task!)},
-        {label: 'Düzenle', icon: 'pi pi-pencil', command: () => editTask(task!)},
+        {label: 'Görüntüle', icon: 'pi pi-eye', command: () => editTask()},
+        {label: 'Düzenle', icon: 'pi pi-pencil', command: () => editTask()},
         {label: 'Sil', icon: 'pi pi-trash', command: () => setConfirmVisible(true)}
     ];
     const onRightClick = (event: DataTableRowEvent) => {
@@ -65,10 +68,6 @@ const Home = () => {
         }
     };
     const editTask = () => {
-        // Object.keys(_task).map(function (keyName, keyIndex) {
-        //     formik.setFieldValue(keyName, _task[keyName], false);
-        // })
-        // formik.setFieldValue("dueDate", new Date(_task.dueDate), false);
         setEditDialogVisible(true);
     };
     const openNew = () => {
@@ -105,8 +104,7 @@ const Home = () => {
                 styleClazz = 'bg-gray-100 text-gray-800';
         }
         return (
-            <span
-                className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${styleClazz}`}>{label}</span>
+            <Tag value={label} className={`${styleClazz}`}/>
         )
     }
     const dateColumnBody = (_task: Task) => {
@@ -117,29 +115,40 @@ const Home = () => {
     const historyColumnBody = (_task: Task) => {
         const op = useRef(null);
         return <>
-            <Button link label={_task.comments.length +  ' değişiklik'}
-                    onClick={(e)=> op.current.toggle(e)}
-                    icon="pi pi-history"/>
+            <Button link label={(_task.history ? _task.history.length : 0) + ' değişiklik'}
+                    onClick={(e) => op.current.toggle(e)}
+                    icon="pi pi-history" disabled={!_task.history || _task.history.length === 0}/>
             <OverlayPanel ref={op}>
                 <ul>
-                {_task.comments.map((comment, index) => (
-                    <li key={index}>
-                        <div className="flex-shrink-0 w-24 text-[9px] text-gray-500">{format(comment.date, "dd.MM.yyyy HH:mm")}</div>
-                        <div className="flex-1">
-                            <div className="mt-1 text-[10px] text-gray-500 flex items-center gap-1">
-                                <span>{comment.user}:</span>
-                            </div>
-                            {comment.content && (
-                                <div className="mt-1 text-[10px] text-gray-600">
-                                    {comment.content}
+                    {_task.history && _task.history.map((comment, index) => (
+                        <li key={index}>
+                            <div
+                                className="flex-shrink-0 w-24 text-[9px] text-gray-500">{format(comment.date, "dd.MM.yyyy HH:mm")}</div>
+                            <div className="flex-1">
+                                <div className="mt-1 text-[10px] text-gray-500 flex items-center gap-1">
+                                    <span>{comment.by}:</span>
                                 </div>
-                            )}
-                        </div>
-                    </li>
-                ))}
+                                {comment.note && (
+                                    <div className="mt-1 text-[10px] text-gray-600">
+                                        {comment.note}
+                                    </div>
+                                )}
+                            </div>
+                        </li>
+                    ))}
                 </ul>
             </OverlayPanel>
         </>;
+    }
+    const avatarColumnBody = (_task: Task) => {
+        return (
+            <AvatarGroup className="mb-3">
+                <Avatar label="+2" shape="circle" size="large"
+                        style={{backgroundColor: '#9c27b0', color: '#ffffff'}}></Avatar>
+                <Avatar label="NA" size="large" shape="circle"></Avatar>
+                <Avatar label="YK" size="large" shape="circle"></Avatar>
+            </AvatarGroup>
+        );
     }
     return (
         <div className="grid crud-demo">
@@ -174,6 +183,7 @@ const Home = () => {
                             <Column field="title" header="Tanım" sortable headerStyle={{minWidth: '15rem'}}/>
                             <Column field="priority" header="Öncelik" sortable body={priorityColumnBody}/>
                             <Column field="dueDate" header="Teslim Tarihi" sortable body={dateColumnBody}/>
+                            <Column header="Avatar" sortable body={avatarColumnBody}/>
                             <Column field="assignedBy.label" header="Atayan"/>
                             <Column field="assignedTo.label" header="Atanan"/>
                             <Column field="status.label" header="Durumu"/>
