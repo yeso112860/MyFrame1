@@ -7,10 +7,6 @@ class TaskService {
         const response = await axios.get(`${apiBaseURL}/api/changeit`);
         return response.data;
     };
-    getStatuses = async (): Promise<Parameter[]> => {
-        const response = await axios.get(`${apiBaseURL}/api/changeit/statuses`);
-        return response.data;
-    }
     getPeople = async (): Promise<Parameter[]> => {
         const response = await axios.get(`${apiBaseURL}/api/changeit/people`);
         return response.data;

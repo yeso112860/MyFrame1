@@ -1,7 +1,6 @@
 package tr.org.turksat.backend.controller;
 
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tr.org.turksat.backend.model.dto.TaskDto;
@@ -11,8 +10,6 @@ import tr.org.turksat.backend.service.TaskService;
 import tr.org.turksat.common.contoller.BaseController;
 import tr.org.turksat.common.model.dto.BaseRequestDto;
 import tr.org.turksat.common.model.dto.BaseResponseDto;
-
-import java.util.UUID;
 
 @RestController
 public class TaskControllerImpl extends BaseController<TaskService, TaskDto, TaskRequestDto, TaskResponseDto> implements TaskController {
@@ -31,12 +28,12 @@ public class TaskControllerImpl extends BaseController<TaskService, TaskDto, Tas
     }
 
     @Override
-    public ResponseEntity<BaseResponseDto> taskSil(BaseRequestDto<UUID> baseRequestDto) {
+    public ResponseEntity<BaseResponseDto> taskSil(BaseRequestDto<Long> baseRequestDto) {
         return super.sil(baseRequestDto);
     }
 
     @Override
-    public ResponseEntity<BaseResponseDto> taskSilByMetaveriServisBilgileriId(BaseRequestDto<UUID> baseRequestDto) {
+    public ResponseEntity<BaseResponseDto> taskSilByMetaveriServisBilgileriId(BaseRequestDto<Long> baseRequestDto) {
         return null;
     }
 
@@ -46,7 +43,7 @@ public class TaskControllerImpl extends BaseController<TaskService, TaskDto, Tas
     }
 
     @Override
-    public ResponseEntity<BaseResponseDto<TaskResponseDto>> getTaskById(BaseRequestDto<UUID> baseRequestDto) {
+    public ResponseEntity<BaseResponseDto<TaskResponseDto>> getTaskById(BaseRequestDto<Long> baseRequestDto) {
         return super.bul(baseRequestDto);
     }
 

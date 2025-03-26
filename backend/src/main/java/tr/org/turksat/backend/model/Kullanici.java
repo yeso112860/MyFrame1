@@ -1,17 +1,12 @@
 package tr.org.turksat.backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.Where;
-import tr.org.turksat.common.constant.EntityConstant;
+import tr.org.turksat.backend.model.Interfaces.OrganisationalEntity;
 import tr.org.turksat.common.model.BaseEntity;
 
 @Entity
@@ -19,15 +14,17 @@ import tr.org.turksat.common.model.BaseEntity;
 @NoArgsConstructor
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "kullanici")
-public class Kullanici extends BaseEntity {
-    private @Column(columnDefinition = "text") String username;
-    private @Column(columnDefinition = "text") String password;
-    private @Column(columnDefinition = "text") String email;
-    private @Column(columnDefinition = "text") String firstName;
-    private @Column(columnDefinition = "text") String lastName;
-    private @Column(columnDefinition = "text") String phone;
-    private @Column(columnDefinition = "text") String imageUrl;
-    private @Column(columnDefinition = "text") String bio;
+public class Kullanici extends BaseEntity implements OrganisationalEntity {
+    private @Column(name = "kullanici_adi", nullable = false)String kullaniciAdi;
+    private String ad;
+    private String soyad;
+    private boolean enabled = true;
+    private @Column(name = "eposta", length = 100)String ePosta;
+    @Column(name = "resim_id")
+    private Long resimId;
+    private @ManyToOne Birim birim;
+    @Column(name = "unvan")
+    private String unvan;
 }

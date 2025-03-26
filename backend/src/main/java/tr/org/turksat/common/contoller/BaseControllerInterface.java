@@ -17,7 +17,6 @@ import tr.org.turksat.common.model.dto.HistoryDto;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public interface BaseControllerInterface <DtoType extends BaseDto,RequestDtoType ,ResponseDtoType>{
 
@@ -38,11 +37,11 @@ public interface BaseControllerInterface <DtoType extends BaseDto,RequestDtoType
 
     ResponseEntity<DtoType> kaydet(DtoType dto);
 
-    ResponseEntity<DtoType> bul(UUID uid);
+    ResponseEntity<DtoType> bul(Long uid);
 
-    ResponseEntity<BaseResponseDto<ResponseDtoType>> bul(BaseRequestDto<UUID> baseRequestDto);
+    ResponseEntity<BaseResponseDto<ResponseDtoType>> bul(BaseRequestDto<Long> baseRequestDto);
 
-    void sil(UUID uid);
+    void sil(Long uid);
 
     ResponseEntity<Set<DtoType>> kaydet(Set<DtoType> dtoList);
 
@@ -56,7 +55,7 @@ public interface BaseControllerInterface <DtoType extends BaseDto,RequestDtoType
 
     void sil(List<DtoType> dtoList);
 
-    ResponseEntity<BaseResponseDto> sil(BaseRequestDto<UUID> baseRequestDto);
+    ResponseEntity<BaseResponseDto> sil(BaseRequestDto<Long> baseRequestDto);
 
     ResponseEntity<List<DtoType>> hepsiniBul();
 

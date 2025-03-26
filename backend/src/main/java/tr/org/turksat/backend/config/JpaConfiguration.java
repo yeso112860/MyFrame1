@@ -13,9 +13,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class JpaConfiguration {
     @Bean
-    public AuditorAware<String> auditorAware() {
+    public AuditorAware<Long> auditorAware() {
         return new AuditorAwareImpl();
     }
+
     @Bean
     HibernatePropertiesCustomizer jsonFormatMapperCustomizer(ObjectMapper objectMapper) {
         return (properties) -> properties.put(AvailableSettings.JSON_FORMAT_MAPPER,

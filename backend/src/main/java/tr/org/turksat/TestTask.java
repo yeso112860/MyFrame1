@@ -21,7 +21,7 @@ public class TestTask implements CommandLineRunner {
             TaskHistory taskHistory = new TaskHistory();
             taskHistory.setBy("Sytem");
             taskHistory.setDate(ZonedDateTime.now());
-            taskHistory.setNote(task.getAssignedBy().getFirstName() + " " + task.getAssignedBy().getLastName() + " tarafından oluşturuldu");
+            taskHistory.setNote(task.getAssignedBy().getAd() + " " + task.getAssignedBy().getSoyad() + " tarafından oluşturuldu");
             task.setHistory(List.of(taskHistory));
             taskRepository.save(task);
         }

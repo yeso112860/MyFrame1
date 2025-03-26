@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TaskResponseDto  extends BaseDto {
+public class TaskResponseDto extends BaseDto {
     private String title;
     private String description;
     private ZonedDateTime dueDate;

@@ -7,9 +7,12 @@ spring:
         jwt:
           issuer-uri: http://localhost:8081/realms/company-services
   datasource:
-    url: jdbc:h2:mem:mydb
-    username: sa
-    password: password
+    url: jdbc:postgresql://localhost:5432/yusuf?charSet=UTF-8
+    username: postgres
+    password: root
+#    url: jdbc:h2:mem:mydb
+#    username: sa
+#    password: password
   jpa:
     open-in-view: true
     show-sql: true

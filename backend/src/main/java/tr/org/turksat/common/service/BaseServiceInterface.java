@@ -7,7 +7,6 @@ import tr.org.turksat.common.model.dto.*;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public interface BaseServiceInterface <DtoType extends BaseDto,RequestDtoType,ResponseDtoType>{
 
@@ -44,18 +43,18 @@ public interface BaseServiceInterface <DtoType extends BaseDto,RequestDtoType,Re
      * Service'te kullanılacak sil methodu.
      * @param uid repository katmanına taşınacak Entity UUID
      */
-    void sil(UUID uid);
+    void sil(Long uid);
 
-    BaseResponseDto sil(BaseRequestDto<UUID> baseRequestDto);
+    BaseResponseDto sil(BaseRequestDto<Long> baseRequestDto);
 
     /**
      * Service'te kullanılacak bul methodu.
      * @param id repository katmanına taşınacak Entity UUID
      * @return repository katmanından dönen Dto
      */
-    DtoType bul(UUID id);
+    DtoType bul(Long id);
 
-    BaseResponseDto bul(BaseRequestDto<UUID> baseRequestDto);
+    BaseResponseDto bul(BaseRequestDto<Long> baseRequestDto);
 
     List<DtoType> hepsiniBul();
     List<DtoType> hepsiniBul(int page, int size);

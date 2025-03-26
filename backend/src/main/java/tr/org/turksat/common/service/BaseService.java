@@ -27,7 +27,7 @@ import java.util.*;
 @Aspect
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class BaseService<RepositoryType extends BaseRepository<EntityType, UUID>,
+public abstract class BaseService<RepositoryType extends BaseRepository<EntityType, Long>,
         MapperType extends BaseMapper<DtoType, EntityType, RequestDtoType, ResponseDtoType>,
         EntityType extends BaseEntity, DtoType extends BaseDto, RequestDtoType, ResponseDtoType> implements BaseServiceInterface<DtoType, RequestDtoType, ResponseDtoType> {
     protected final RepositoryType repository;
@@ -61,14 +61,14 @@ public abstract class BaseService<RepositoryType extends BaseRepository<EntityTy
 
     @Override
     @SneakyThrows
-    public DtoType bul(UUID uid) {
+    public DtoType bul(Long uid) {
         return mapper.entityToDto(repository.findById(uid).
                 orElseThrow(() -> new BusinessException("ortak.kayit.bulunamadi", HttpStatus.NOT_FOUND)));
     }
 
     @Override
-    public BaseResponseDto<ResponseDtoType> bul(BaseRequestDto<UUID> baseRequestDto) {
-        UUID id = baseRequestDto.getObject();
+    public BaseResponseDto<ResponseDtoType> bul(BaseRequestDto<Long> baseRequestDto) {
+        Long id = baseRequestDto.getObject();
         if (id == null) {
             throw new BusinessException("ortak.id.bos.olamaz", HttpStatus.BAD_REQUEST);
         } else {
@@ -87,7 +87,7 @@ public abstract class BaseService<RepositoryType extends BaseRepository<EntityTy
     }
 
     @Override
-    public void sil(UUID id) {
+    public void sil(Long id) {
         if (id == null) {
             throw new BusinessException("ortak.id.bos.olamaz", HttpStatus.BAD_REQUEST);
         } else {
@@ -96,8 +96,8 @@ public abstract class BaseService<RepositoryType extends BaseRepository<EntityTy
     }
 
     @Override
-    public BaseResponseDto sil(BaseRequestDto<UUID> baseRequestDto) {
-        UUID katalogID = baseRequestDto.getObject();
+    public BaseResponseDto sil(BaseRequestDto<Long> baseRequestDto) {
+        Long katalogID = baseRequestDto.getObject();
         if (katalogID != null) {
             try {
                 sil(katalogID);

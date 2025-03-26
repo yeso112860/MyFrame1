@@ -5,6 +5,7 @@ import lombok.Setter;
 import tr.org.turksat.backend.model.Comment;
 import tr.org.turksat.backend.model.TaskHistory;
 import tr.org.turksat.backend.model.TaskPriority;
+import tr.org.turksat.backend.model.TaskStatus;
 import tr.org.turksat.common.model.dto.BaseDto;
 
 import java.time.ZonedDateTime;
@@ -22,6 +23,6 @@ public class TaskDto extends BaseDto {
     private List<TaskHistory> history;
     private ParameterDto assignedBy;
     private ParameterDto assignedTo;
-    private ParameterDto status;
+    private TaskStatus status;
     private Long versiyon = 1L;
 }

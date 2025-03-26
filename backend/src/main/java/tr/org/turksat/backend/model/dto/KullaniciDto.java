@@ -14,8 +14,10 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class KullaniciDto extends BaseDto implements Serializable {
-    @NotNull(message = "anahtar.bos") String username;
-    @NotNull(message = "anahtar.bos") String password;
+    @NotNull(message = "anahtar.bos")
+    String username;
+    @NotNull(message = "anahtar.bos")
+    String password;
     String email;
     String firstName;
     String lastName;

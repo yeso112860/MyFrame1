@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(HttpMethod.GET, "/api/changeit").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/changeit").authenticated()
-                        .requestMatchers(HttpMethod.DELETE,"/api/changeit").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/changeit").hasAnyRole("ADMIN")
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(

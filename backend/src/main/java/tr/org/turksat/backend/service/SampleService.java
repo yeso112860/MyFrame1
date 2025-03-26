@@ -17,7 +17,6 @@ import tr.org.turksat.common.service.ExporterService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class SampleService {
@@ -42,33 +41,8 @@ public class SampleService {
         return taskMapper.entityToDto(taskRepository.save(entity));
     }
 
-    public void deleteTask(UUID id) {
+    public void deleteTask(Long id) {
         taskRepository.deleteById(id);
-    }
-
-    public List<KullaniciDto> getKullanicilar() {
-        return kullaniciMapper.toDtoList(kullaniciRepository.findAll());
-    }
-
-    public KullaniciDto addUser(KullaniciDto kullaniciDto) {
-        Optional<Kullanici> byId;
-        if (kullaniciDto.getId() != null)
-            byId = kullaniciRepository.findById(kullaniciDto.getId());
-        else byId = Optional.empty();
-        Kullanici entity;
-        if (byId.isEmpty()) {
-            entity = kullaniciMapper.toEntity(kullaniciDto);
-            entity.setId(UUID.randomUUID());
-        } else {
-            entity = byId.get();
-            kullaniciMapper.updateEntity(entity, kullaniciDto);
-        }
-        Kullanici save = kullaniciRepository.save(entity);
-        return kullaniciMapper.toDto(save);
-    }
-
-    public List<ParameterDto> getStatusParameters() {
-        return taskRepository.getStatusParameters();
     }
 
     public List<ParameterDto> getPeople() {

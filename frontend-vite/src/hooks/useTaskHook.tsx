@@ -2,7 +2,6 @@ import {useAuthHook} from "~/hooks/useAuthHook.tsx";
 import {useEffect, useState} from "react";
 import {keepPreviousData, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {taskApi} from "~/service/TaskService.ts";
-import {defaultStaleTime} from "~/utilities/constants";
 import Task from "~/utilities/types/models";
 import {useToast} from "~/store/toastContext.tsx";
 
@@ -17,7 +16,7 @@ export function useTaskHook() {
         queryKey: ["Tasks"],
         queryFn: async () => taskApi.getTasks(),
         placeholderData: keepPreviousData,
-        staleTime: defaultStaleTime,
+        staleTime: 30000,
     });
     const newTask = useMutation({
         mutationFn: (data: Task) => taskApi.newTask(data),
@@ -56,19 +55,12 @@ export function useTaskHook() {
         },
     });
 
-    const fetchStatuses = useQuery({
-        enabled: fetch,
-        queryKey: ["Statuses"],
-        queryFn: async () => taskApi.getStatuses(),
-        placeholderData: keepPreviousData,
-        staleTime: defaultStaleTime,
-    });
     const fetchPeople = useQuery({
         enabled: fetch,
         queryKey: ["People"],
         queryFn: async () => taskApi.getPeople(),
         placeholderData: keepPreviousData,
-        staleTime: defaultStaleTime,
+        staleTime: 300000,
     });
 
     useEffect(() => {
@@ -83,7 +75,6 @@ export function useTaskHook() {
         }
     }, [fetch]);
     return {
-        fetchStatuses,
         fetchTasks,
         newTask,
         deleteTask,

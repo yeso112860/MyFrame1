@@ -1,7 +1,9 @@
 export enum TaskPriority {
     Low = 'LOW', Medium = 'MEDIUM', High = 'HIGH',
 }
-
+export enum TaskStatus {
+    OPEN='OPEN', IN_PROGRESS='IN_PROGRESS', WAITING='WAITING', COMPLETED='COMPLETED'
+}
 export class Task {
     id: string;
     title: string;
@@ -11,7 +13,7 @@ export class Task {
     progress: number;
     assignedBy?: Parameter;
     assignedTo?: Parameter;
-    status?: Parameter;
+    status?: TaskStatus;
     private _history: TaskHistory[] = [];
     private _comments: Comment[] = [];
     public get history() {return this._history;}
@@ -20,7 +22,7 @@ export class Task {
     public set comments(comments: Comment[]) {this._comments = comments;}
 
     constructor(id?: string, title?: string, description?: string, dueDate?: Date, priority?: TaskPriority,
-                progress?: number, assignedBy?: Parameter, assignedTo?: Parameter, status?: Parameter) {
+                progress?: number, assignedBy?: Parameter, assignedTo?: Parameter, status?: TaskStatus) {
         this.id = id || '';
         this.title = title || '';
         this.description = description || '';

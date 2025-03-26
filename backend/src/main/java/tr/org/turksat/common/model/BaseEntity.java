@@ -6,20 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.SoftDelete;
-import org.hibernate.annotations.SoftDeleteType;
-import org.hibernate.type.YesNoConverter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import tr.org.turksat.common.constant.EntityConstant;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @MappedSuperclass
 @EntityListeners({AuditingEntityListener.class})
@@ -29,27 +25,28 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @SoftDelete(columnName = "silindi")
-public abstract class BaseEntity implements Persistable<UUID> {
+public abstract class BaseEntity implements Persistable<Long> {
     @Id
-    @GeneratedValue
+    @TableGenerator(name = "hibernate_sequences", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "hibernate_sequences")
     @Column(name = "id", nullable = false)
-    private UUID id;
+    private Long id;
 
-    @Column(name = "olusturulma_tarihi", nullable = false, updatable = false)
+    @Column(name = "olusturulma_zamani", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime olusturulmaTarihi;
 
-    @Column(name = "degistirilme_tarihi")
+    @Column(name = "son_guncelleme_zamani")
     @LastModifiedDate
     private LocalDateTime guncellenmeTarihi;
 
-    @Column(name = "olusturan_kisi", nullable = false, updatable = false)
+    @Column(name = "olusturan_kullanici_id", nullable = false, updatable = false)
     @CreatedBy
-    private String olusturanKullanici;
+    private Long olusturanKullaniciId;
 
-    @Column(name = "degistiren_kisi")
+    @Column(name = "son_guncelleyen_kullanici_id")
     @LastModifiedBy
-    private String guncelleyenKullanici;
+    private Long guncelleyenKullaniciId;
 
 //    @Column(name = "silindi", nullable = false)
 //    private boolean silindi = false;

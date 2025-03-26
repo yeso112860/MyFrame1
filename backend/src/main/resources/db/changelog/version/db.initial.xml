@@ -4,216 +4,47 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <!--    <changeSet id="1741414994368-1" author="yasiravcibasi">-->
-    <!--        <sql>CREATE-->
-    <!--        EXTENSION IF NOT EXISTS "uuid-ossp"</sql>-->
-    <!--    </changeSet>-->
-    <changeSet id="1741426576080-1" author="yasiravcibasi">
-        <createTable tableName="kullanici">
-            <column name="id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_kullanici"/>
-            </column>
-            <column name="olusturulma_tarihi" type="DATETIME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="degistirilme_tarihi" type="DATETIME"/>
-            <column name="olusturan_kisi" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="degistiren_kisi" type="VARCHAR(255)"/>
-            <column name="silindi" type="boolean">
-                <constraints nullable="false"/>
-            </column>
-            <column name="versiyon" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="username" type="text"/>
-            <column name="password" type="text"/>
-            <column name="email" type="text"/>
-            <column name="first_name" type="text"/>
-            <column name="last_name" type="text"/>
-            <column name="phone" type="text"/>
-            <column name="image_url" type="text"/>
-            <column name="bio" type="text"/>
-        </createTable>
-        <createTable tableName="param_status">
-            <column name="id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_param_status"/>
-            </column>
-            <column name="olusturulma_tarihi" type="DATETIME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="degistirilme_tarihi" type="DATETIME"/>
-            <column name="olusturan_kisi" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="degistiren_kisi" type="VARCHAR(255)"/>
-            <column name="silindi" type="boolean">
-                <constraints nullable="false"/>
-            </column>
-            <column name="versiyon" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="label" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="text"/>
-        </createTable>
+    <changeSet id="1743015690822-1" author="yasiravcibasi">
         <createTable tableName="task">
-            <column name="id" type="UUID">
+            <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_task"/>
             </column>
-            <column name="olusturulma_tarihi" type="DATETIME">
+            <column name="silindi" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column name="degistirilme_tarihi" type="DATETIME"/>
-            <column name="olusturan_kisi" type="VARCHAR(255)">
+            <column name="olusturulma_zamani" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
-            <column name="degistiren_kisi" type="VARCHAR(255)"/>
-            <column name="silindi" type="boolean">
+            <column name="son_guncelleme_zamani" type="DATETIME"/>
+            <column name="olusturan_kullanici_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="son_guncelleyen_kullanici_id" type="BIGINT"/>
             <column name="versiyon" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="title" type="text">
                 <constraints nullable="false"/>
             </column>
-            <column name="priority" type="text"/>
-            <column name="progress" type="int" defaultValue="0">
-                <constraints nullable="false"/>
-            </column>
-            <column name="comments" type="json"/>
-            <column name="history" type="json"/>
             <column name="description" type="text"/>
             <column name="due_date" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column name="assigned_by_id" type="UUID"/>
-            <column name="assigned_to_id" type="UUID"/>
-            <column name="status_id" type="UUID"/>
+            <column name="priority" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="progress" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comments" type="json"/>
+            <column name="history" type="json"/>
+            <column name="assigned_by_id" type="BIGINT"/>
+            <column name="assigned_to_id" type="BIGINT"/>
+            <column name="status" type="text">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="assigned_by_id" baseTableName="task"
-                                 constraintName="FK_TASK_ON_ASSIGNEDBY" referencedColumnNames="id"
-                                 referencedTableName="kullanici"/>
-        <addForeignKeyConstraint baseColumnNames="assigned_to_id" baseTableName="task"
-                                 constraintName="FK_TASK_ON_ASSIGNEDTO" referencedColumnNames="id"
-                                 referencedTableName="kullanici"/>
-        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="task" constraintName="FK_TASK_ON_STATUS"
-                                 referencedColumnNames="id" referencedTableName="param_status"/>
-
+        <addForeignKeyConstraint baseColumnNames="assigned_by_id" baseTableName="task" constraintName="FK_TASK_ON_ASSIGNEDBY" referencedColumnNames="id" referencedTableName="kullanici"/>
+        <addForeignKeyConstraint baseColumnNames="assigned_to_id" baseTableName="task" constraintName="FK_TASK_ON_ASSIGNEDTO" referencedColumnNames="id" referencedTableName="kullanici"/>
     </changeSet>
-    <changeSet id="1742139962611-1" author="yasiravcibasi (generated)">
-        <insert tableName="param_status">
-            <column name="id" value="d9c2e676-6978-41f7-864f-80f93e79a2ca"/>
-            <column name="label" value="Sahipsiz"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="false"/>
-        </insert>
-        <insert tableName="param_status">
-            <column name="id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
-            <column name="label" value="Atandı"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="false"/>
-        </insert>
-        <insert tableName="param_status">
-            <column name="id" value="080ac55a-a871-4e4d-80d7-7dab8ef91f11"/>
-            <column name="label" value="Devam Ediyor"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="false"/>
-        </insert>
-        <insert tableName="param_status">
-            <column name="id" value="725232d7-f3f7-43ba-8c6c-ca70dd68657e"/>
-            <column name="label" value="Tamamlandı"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="false"/>
-        </insert>
-        <insert tableName="param_status">
-            <column name="id" value="25899fa1-3adc-4311-b112-3326c5c37524"/>
-            <column name="label" value="İptal"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="false"/>
-        </insert>
-        <insert tableName="kullanici">
-            <column name="id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39"/>
-            <column name="username" value="user1"/>
-            <column name="password" value="user1"/>
-            <column name="first_name" value="Hasan"/>
-            <column name="last_name" value="Kaçan"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="false"/>
-        </insert>
-        <insert tableName="kullanici">
-            <column name="id" value="313f43ab-5add-4985-8aa2-20cdd2bca696"/>
-            <column name="username" value="user2"/>
-            <column name="password" value="user2"/>
-            <column name="first_name" value="Memmet Ali"/>
-            <column name="last_name" value="Kerkenez"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="false"/>
-        </insert>
-        <insert tableName="task">
-            <column name="id" value="e6b98d95-a7b0-46c5-bb18-5a01c17383d4"/>
-            <column name="assigned_by_id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39"/>
-            <column name="assigned_to_id" value="313f43ab-5add-4985-8aa2-20cdd2bca696"/>
-            <column name="status_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
-            <column name="title" value="El-Ikdu'l-manzum fi Zikri Efazıli'r-Rum - Ali b. Bali'nin Şaka'ik Zeyli"/>
-            <column name="description" value="CİLTLİ inceleme, eleştirmeli metin, çeviri 723 sayfa. 17x24 cm"/>
-            <column name="due_date" value="2025-04-01 14:00:00"/>
-            <column name="priority" value="HIGH"/>
-            <column name="progress" value="0"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="false"/>
-        </insert>
-        <insert tableName="task">
-            <column name="id" value="0e8ef914-ba51-4e41-a084-52c09e3c2ddc"/>
-            <column name="assigned_by_id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39"/>
-            <column name="assigned_to_id" value="313f43ab-5add-4985-8aa2-20cdd2bca696"/>
-            <column name="status_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
-            <column name="title" value="Muhibbi Divanı : kendi hattıyla"/>
-            <column name="priority" value="LOW"/>
-            <column name="progress" value="0"/>
-            <column name="description"
-                    value="Divan şiiri--İnceleme Kanuni Sultan Süleyman, 1494-1566 Türkiye Yazma Eserler Kurumu Başkanlığı Yayınları ; 23. Edebiyat ve Sanat Serisi ; 7."/>
-            <column name="due_date" value="2025-04-01 15:00:00"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="false"/>
-        </insert>
-        <insert tableName="task">
-            <column name="id" value="9f0f8ea7-f752-4e4c-a2e9-a606baf8b97b"/>
-            <column name="assigned_by_id" value="f8aa2b2e-a74c-474d-aa6b-7af14f289d39"/>
-            <column name="assigned_to_id" value="313f43ab-5add-4985-8aa2-20cdd2bca696"/>
-            <column name="status_id" value="024c7d0b-bb9a-4510-98fc-5fc3788c6f46"/>
-            <column name="title" value="Silme testi"/>
-            <column name="priority" value="LOW"/>
-            <column name="progress" value="0"/>
-            <column name="description"
-                    value="Bunu görmememiz lazım"/>
-            <column name="due_date" value="2025-04-01 15:00:00"/>
-            <column name="olusturulma_tarihi" value="now()"/>
-            <column name="olusturan_kisi" value="yasiravcibasi"/>
-            <column name="versiyon" value="1"/>
-            <column name="silindi" value="true"/>
-        </insert>
-    </changeSet>
-
 </databaseChangeLog>

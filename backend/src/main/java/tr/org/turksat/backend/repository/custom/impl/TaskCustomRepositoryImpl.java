@@ -6,7 +6,6 @@ import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import tr.org.turksat.backend.model.QKullanici;
-import tr.org.turksat.backend.model.QParamStatus;
 import tr.org.turksat.backend.model.QTask;
 import tr.org.turksat.backend.model.dto.ParameterDto;
 import tr.org.turksat.backend.model.dto.TaskDto;
@@ -24,19 +23,11 @@ public class TaskCustomRepositoryImpl implements TaskCustomRepository {
         this.entityManager = entityManager;
     }
 
-    public List<ParameterDto> getStatusParameters() {
-        JPAQuery<ParameterDto> query = new JPAQuery<>(entityManager);
-        QParamStatus par = QParamStatus.paramStatus;
-        query.from(par);
-        query.select(Projections.bean(ParameterDto.class, par.id, par.label));
-        return query.fetch();
-    }
-
     public List<ParameterDto> getPeople() {
         JPAQuery<ParameterDto> query = new JPAQuery<>(entityManager);
         QKullanici kullanici = QKullanici.kullanici;
         query.from(kullanici);
-        query.select(Projections.bean(ParameterDto.class, kullanici.id, kullanici.firstName.concat(" ").concat(kullanici.lastName).as("label")));
+        query.select(Projections.bean(ParameterDto.class, kullanici.id, kullanici.ad.concat(" ").concat(kullanici.soyad).as("label")));
         return query.fetch();
     }
 
@@ -46,15 +37,12 @@ public class TaskCustomRepositoryImpl implements TaskCustomRepository {
         QTask qt = QTask.task;
         query.from(qt);
         QKullanici ab = new QKullanici("ab"), at = new QKullanici("at");
-        QParamStatus par = QParamStatus.paramStatus;
         query.leftJoin(qt.assignedTo(), at);
         query.leftJoin(qt.assignedBy(), ab);
-        query.leftJoin(qt.status(), par);
         query.select(Projections.bean(TaskDto.class,
-                qt.id, qt.title, qt.description, qt.dueDate, qt.versiyon, qt.priority, qt.progress, qt.comments, qt.history,
-                Projections.bean(ParameterDto.class, ab.id, ab.firstName.concat(" ").concat(ab.lastName).as("label")).as("assignedBy"),
-                Projections.constructor(ParameterDto.class, at.id, at.firstName.concat(" ").concat(at.lastName)).as("assignedTo"),
-                Projections.constructor(ParameterDto.class, par.id, par.label).as("status")
+                qt.id, qt.title, qt.description, qt.dueDate, qt.versiyon, qt.priority, qt.progress, qt.comments, qt.history, qt.status,
+                Projections.bean(ParameterDto.class, ab.id, ab.ad.concat(" ").concat(ab.soyad).as("label")).as("assignedBy"),
+                Projections.constructor(ParameterDto.class, at.id, at.ad.concat(" ").concat(at.soyad)).as("assignedTo")
         ));
         return query.fetch();
     }
