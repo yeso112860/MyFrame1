@@ -14,6 +14,7 @@ import tr.org.turksat.common.service.BaseServiceInterface;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class BaseController<ServiceType
@@ -44,7 +45,7 @@ public abstract class BaseController<ServiceType
 
     @Override
     public ResponseEntity<DtoType> kaydet(DtoType dto) {
-        return (ResponseEntity<DtoType>) responseOlustur(service.kaydet(dto), HttpStatus.CREATED);
+        return responseOlustur(service.kaydet(dto), HttpStatus.CREATED);
     }
 
     @Override
@@ -53,16 +54,16 @@ public abstract class BaseController<ServiceType
     }
 
     @Override
-    public ResponseEntity<DtoType> bul(Long uid) {
-        return (ResponseEntity<DtoType>) responseOlustur(service.bul(uid), HttpStatus.OK);
+    public ResponseEntity<DtoType> bul(UUID uid) {
+        return responseOlustur(service.bul(uid), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<BaseResponseDto<ResponseDtoType>> bul(BaseRequestDto<Long> baseRequestDto) {
+    public ResponseEntity<BaseResponseDto<ResponseDtoType>> bul(BaseRequestDto<UUID> baseRequestDto) {
         return responseOlustur(service.bul(baseRequestDto), HttpStatus.OK);
     }
 
-    public void sil(Long uid) {
+    public void sil(UUID uid) {
         service.sil(uid);
     }
 
@@ -93,7 +94,7 @@ public abstract class BaseController<ServiceType
     }
 
     @Override
-    public ResponseEntity<BaseResponseDto> sil(BaseRequestDto<Long> baseRequestDto) {
+    public ResponseEntity<BaseResponseDto> sil(BaseRequestDto<UUID> baseRequestDto) {
         return responseOlustur(service.sil(baseRequestDto), HttpStatus.OK);
     }
 

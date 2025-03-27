@@ -16,6 +16,7 @@ import tr.org.turksat.common.model.dto.BaseResponseDto;
 import tr.org.turksat.common.model.dto.ResourceDto;
 
 import java.util.List;
+import java.util.UUID;
 
 import static tr.org.turksat.backend.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
 
@@ -30,6 +31,12 @@ public class SampleController {
     @GetMapping
     public ResponseEntity<List<TaskDto>> getTasks() {
         return new ResponseEntity<>(sampleService.getTasks(), HttpStatus.OK);
+    }
+
+    //@PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/statuses")
+    public ResponseEntity<List<ParameterDto>> getStatuses() {
+        return new ResponseEntity<>(sampleService.getStatusParameters(), HttpStatus.OK);
     }
 
     @GetMapping("/people")
@@ -51,7 +58,7 @@ public class SampleController {
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
 //    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponseDto<TaskDto>> deleteTask(@PathVariable("id") Long id) {
+    public ResponseEntity<BaseResponseDto<TaskDto>> deleteTask(@PathVariable("id") UUID id) {
         sampleService.deleteTask(id);
         BaseResponseDto<TaskDto> responseDto = new BaseResponseDto<>();
         responseDto.setSuccess(true);

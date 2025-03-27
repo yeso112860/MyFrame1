@@ -3,10 +3,8 @@ package tr.org.turksat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import tr.org.turksat.backend.model.Comment;
 import tr.org.turksat.backend.model.Task;
 import tr.org.turksat.backend.model.TaskHistory;
-import tr.org.turksat.backend.model.TaskPriority;
 import tr.org.turksat.backend.repository.TaskRepository;
 
 import java.time.ZonedDateTime;
@@ -21,7 +19,7 @@ public class TestTask implements CommandLineRunner {
             TaskHistory taskHistory = new TaskHistory();
             taskHistory.setBy("Sytem");
             taskHistory.setDate(ZonedDateTime.now());
-            taskHistory.setNote(task.getAssignedBy().getAd() + " " + task.getAssignedBy().getSoyad() + " tarafından oluşturuldu");
+            taskHistory.setNote(task.getAssignedBy().getFirstName() + " " + task.getAssignedBy().getLastName() + " tarafından oluşturuldu");
             task.setHistory(List.of(taskHistory));
             taskRepository.save(task);
         }

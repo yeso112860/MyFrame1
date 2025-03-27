@@ -192,7 +192,7 @@ const Home = () => {
                             <Column header="Avatar" sortable body={avatarColumnBody}/>
                             <Column field="assignedBy.label" header="Atayan"/>
                             <Column field="assignedTo.label" header="Atanan"/>
-                            <Column field="status" header="Durumu"/>
+                            <Column field="status.label" header="Durumu"/>
                             <Column field="history" header="Geçmiş" body={historyColumnBody}/>
                         </DataTable>
                     </div>

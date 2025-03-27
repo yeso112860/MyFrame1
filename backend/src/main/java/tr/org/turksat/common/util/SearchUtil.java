@@ -2,13 +2,12 @@ package tr.org.turksat.common.util;
 
 import jakarta.persistence.MapsId;
 import jakarta.persistence.criteria.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
-
-import lombok.extern.slf4j.Slf4j;
 import tr.org.turksat.common.annotation.SearchEntity;
 import tr.org.turksat.common.constant.CommonMessageConstant;
 import tr.org.turksat.common.model.BaseEntity;
@@ -70,7 +69,7 @@ public class SearchUtil {
                     } else if (entityNestedPath != null && !entityNestedPath.equalsIgnoreCase("")) {
                         rootExpression = (Expression<String>) getJoinExpressionX(root, entityClass, entityNestedPath);
                     } else {
-                        rootExpression = (Expression<String>) convertRootAsFieldType(criteriaBuilder, root, field, fieldType);
+                        rootExpression = convertRootAsFieldType(criteriaBuilder, root, field, fieldType);
                     }
 
                     //Value değerinin boş gelme durumu kontrol ediliyor.
@@ -89,7 +88,7 @@ public class SearchUtil {
                     switch (operator) {
                         case "equals":
                             if (String.class.equals(fieldType)) {
-                                predicate = (criteriaBuilder.equal(criteriaBuilder.lower(rootExpression.as(String.class)),convertedValue));
+                                predicate = (criteriaBuilder.equal(criteriaBuilder.lower(rootExpression.as(String.class)), convertedValue));
                             } else {
                                 predicate = (criteriaBuilder.equal(rootExpression, convertedValue));
                             }
@@ -473,10 +472,9 @@ public class SearchUtil {
 
             } else if (Double.class.equals(fieldType)) {
                 return Double.valueOf((String) value).doubleValue();
-            } else if(BigDecimal.class.equals(fieldType)) {
+            } else if (BigDecimal.class.equals(fieldType)) {
                 return BigDecimal.valueOf(Double.parseDouble(value.toString()));
-            }
-            else {
+            } else {
                 return (Comparable<?>) value;
             }
         } catch (IllegalArgumentException e) {
@@ -569,11 +567,8 @@ public class SearchUtil {
     }
 
     public static boolean isSimple(BaseRequestDto baseRequestDto) {
-        if (baseRequestDto.getSize() == -1 && CollectionUtils.isEmpty(baseRequestDto.getFilters()) &&
+        return baseRequestDto.getSize() == -1 && CollectionUtils.isEmpty(baseRequestDto.getFilters()) &&
                 (baseRequestDto.getStringSearchKey() == null || baseRequestDto.getStringSearchKey().equalsIgnoreCase("")) &&
-                CollectionUtils.isEmpty(baseRequestDto.getSortList())) {
-            return true;
-        }
-        return false;
+                CollectionUtils.isEmpty(baseRequestDto.getSortList());
     }
 }

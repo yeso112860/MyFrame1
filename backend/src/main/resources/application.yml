@@ -7,12 +7,9 @@ spring:
         jwt:
           issuer-uri: http://localhost:8081/realms/company-services
   datasource:
-    url: jdbc:postgresql://localhost:5432/yusuf?charSet=UTF-8
-    username: postgres
-    password: root
-#    url: jdbc:h2:mem:mydb
-#    username: sa
-#    password: password
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
   jpa:
     open-in-view: true
     show-sql: true
@@ -29,7 +26,7 @@ app:
     allowed-origins: http://localhost:3000
 javers:
   mongodb:
-    uri: mongodb://localhost:27017/profit-react-mongodb
+    uri: mongodb://localhost:27017/myframe1
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true

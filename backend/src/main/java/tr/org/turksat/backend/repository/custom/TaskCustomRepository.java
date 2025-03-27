@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface TaskCustomRepository {
+    List<ParameterDto> getStatusParameters();
+
     List<ParameterDto> getPeople();
 
     List<TaskDto> findAllDto();

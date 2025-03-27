@@ -2,7 +2,7 @@ import {useFormik} from "formik"
 import * as Yup from "yup";
 import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog"
-import {Comment, Task, TaskPriority, TaskStatus} from "~/utilities/types/models";
+import {Comment, Task, TaskPriority} from "~/utilities/types/models";
 import {LoadingQueueContext} from "~/store/loadingContext";
 import {useContext, useState} from "react";
 import {useTaskHook} from "~/hooks/useTaskHook";
@@ -25,7 +25,7 @@ interface TaskDialogProps {
 
 export const EditTaskDialog = ({isVisible, hideDialog, task, disabled=true}: TaskDialogProps) => {
     const {addLoading, removeLoading} = useContext(LoadingQueueContext);
-    const {newTask, fetchPeople} = useTaskHook();
+    const {fetchStatuses, newTask, fetchPeople} = useTaskHook();
     const [newComment, setNewComment] = useState<string>('');
     const validationSchema = Yup.object({
         priority: Yup.string().required("Görev Önceliği Zorunlu alan"),
@@ -34,7 +34,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task, disabled=true}: Tas
         dueDate: Yup.string().required("Görev Teslim Tarihi Zorunlu alan"),
         assignedBy: Yup.object().required("Görevi Atayan Zorunlu alan"),
         assignedTo: Yup.object().required("Görev Atanan Zorunlu alan"),
-        status: Yup.string().required("Görev Durumu Zorunlu alan"),
+        status: Yup.object().required("Görev Durumu Zorunlu alan"),
         //status: Yup.number().typeError("Servis Versiyonu Alanı sadece sayı olmalıdır"),
     });
     const formik = useFormik({
@@ -258,7 +258,7 @@ export const EditTaskDialog = ({isVisible, hideDialog, task, disabled=true}: Tas
                 </div>
                 <div className="field">
                     <label>Durumu</label>
-                    <Dropdown id="status" value={formik.values?.status} options={Object.values(TaskStatus)} required
+                    <Dropdown id="status" value={formik.values?.status} options={fetchStatuses.data} required
                               optionLabel="label"
                               disabled={disabled}
                               className={classNames("w-full", {"p-invalid": isFormFieldInvalid("status")})}

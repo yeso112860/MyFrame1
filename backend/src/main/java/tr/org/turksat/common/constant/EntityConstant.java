@@ -10,6 +10,6 @@ public class EntityConstant {
     public static final String VERSION = "versiyon";
 
     public static final boolean DURUM_AKTIF = false;
-//    public static final short DURUM_PASIF = 0;
+    //    public static final short DURUM_PASIF = 0;
     public static final boolean DURUM_SILINDI = true;
 }

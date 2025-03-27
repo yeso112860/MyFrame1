@@ -21,5 +21,4 @@ public class ApiConstants {
     public static final String RESOURCE_HISTORY = "/history";
 
 
-
 }

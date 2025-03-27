@@ -15,6 +15,8 @@ import tr.org.turksat.common.contoller.BaseControllerInterface;
 import tr.org.turksat.common.model.dto.BaseRequestDto;
 import tr.org.turksat.common.model.dto.BaseResponseDto;
 
+import java.util.UUID;
+
 @CrossOrigin()
 @RequestMapping(ApiConstants.RESOURCE_TASK)
 @Tag(name = SwaggerConstants.TAG_TASK)
@@ -34,15 +36,15 @@ public interface TaskController extends BaseControllerInterface<TaskDto, TaskReq
 
     @DeleteMapping(ApiConstants.RESOURCE_SIL)
     @Operation(summary = SwaggerConstants.OPERATION_TASK_DELETE)
-    ResponseEntity<BaseResponseDto> taskSil(@RequestBody BaseRequestDto<Long> taskRequestDto);
+    ResponseEntity<BaseResponseDto> taskSil(@RequestBody BaseRequestDto<UUID> taskRequestDto);
 
     @DeleteMapping(ApiConstants.RESOURCE_DIS_IDYE_GORE_SIL)
     @Operation(summary = SwaggerConstants.OPERATION_TASK_DIS_IDYE_GORE_SILME)
-    ResponseEntity<BaseResponseDto> taskSilByMetaveriServisBilgileriId(@RequestBody BaseRequestDto<Long> baseRequestDto);
+    ResponseEntity<BaseResponseDto> taskSilByMetaveriServisBilgileriId(@RequestBody BaseRequestDto<UUID> baseRequestDto);
 
     @PostMapping(path = ApiConstants.RESOURCE_GETIR)
     @Operation(summary = SwaggerConstants.OPERATION_TASK_IDYE_GORE_GETIR)
-    ResponseEntity<BaseResponseDto<TaskResponseDto>> getTaskById(@RequestBody BaseRequestDto<Long> taskRequestDto);
+    ResponseEntity<BaseResponseDto<TaskResponseDto>> getTaskById(@RequestBody BaseRequestDto<UUID> taskRequestDto);
 
     @PostMapping(ApiConstants.RESOURCE_EXPORT)
     @Operation(summary = SwaggerConstants.TAG_TASK + SwaggerConstants.EXPORT)

@@ -55,6 +55,13 @@ export function useTaskHook() {
         },
     });
 
+    const fetchStatuses = useQuery({
+        enabled: fetch,
+        queryKey: ["Statuses"],
+        queryFn: async () => taskApi.getStatuses(),
+        placeholderData: keepPreviousData,
+        staleTime: 300000,
+    });
     const fetchPeople = useQuery({
         enabled: fetch,
         queryKey: ["People"],
@@ -75,6 +82,7 @@ export function useTaskHook() {
         }
     }, [fetch]);
     return {
+        fetchStatuses,
         fetchTasks,
         newTask,
         deleteTask,

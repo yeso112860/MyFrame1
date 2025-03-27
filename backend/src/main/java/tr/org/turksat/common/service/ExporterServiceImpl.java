@@ -33,28 +33,35 @@ import tr.org.turksat.common.model.dto.BaseRequestDto;
 import tr.org.turksat.common.model.dto.ResourceDto;
 import tr.org.turksat.common.util.Pattern;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
 public class ExporterServiceImpl implements ExporterService {
     private final ObjectMapper objectMapper;
     private final MessageSource messageSource;
+
     @Autowired
     public ExporterServiceImpl(ObjectMapper objectMapper, MessageSource messageSource) {
         this.objectMapper = objectMapper;
         this.messageSource = messageSource;
     }
 
-    public <T> ResourceDto export(BaseRequestDto baseRequestDto, List<T>  dtoList, String fileName ) {
-        if(CollectionUtils.isEmpty(baseRequestDto.getFieldNames()))
-        { return null; }
+    public <T> ResourceDto export(BaseRequestDto baseRequestDto, List<T> dtoList, String fileName) {
+        if (CollectionUtils.isEmpty(baseRequestDto.getFieldNames())) {
+            return null;
+        }
 
         ResourceDto resourceDto = null;
         switch (baseRequestDto.getExportType()) {
@@ -84,7 +91,7 @@ public class ExporterServiceImpl implements ExporterService {
             }
             case "word": {
                 try {
-                resourceDto = convertExcelToWord(dtoList, fileName, baseRequestDto.getFieldNames());
+                    resourceDto = convertExcelToWord(dtoList, fileName, baseRequestDto.getFieldNames());
                 } catch (IllegalAccessException e) {
                     throw new BusinessException(CommonMessageConstant.EXPORT_HATA, HttpStatus.NOT_FOUND);
                 }
@@ -111,11 +118,11 @@ public class ExporterServiceImpl implements ExporterService {
 
         for (int i = 0; i < fields.size(); i++) {
             String fieldName = fields.get(i);
-            String headerName =null;
-            try{
-                headerName= messageSource.getMessage(fieldName,null, Locale.getDefault());
-            }catch (NoSuchMessageException e){
-                headerName=fieldName;
+            String headerName = null;
+            try {
+                headerName = messageSource.getMessage(fieldName, null, Locale.getDefault());
+            } catch (NoSuchMessageException e) {
+                headerName = fieldName;
             }
 
             Cell cell = headerRow.createCell(i);
@@ -156,21 +163,22 @@ public class ExporterServiceImpl implements ExporterService {
         return fields.stream()
                 .map(fieldName -> {
                     try {
-                        Field field = getField( item.getClass(),fieldName);
+                        Field field = getField(item.getClass(), fieldName);
                         field.setAccessible(true);
-                        if("null".equals(String.valueOf(field.get(item)))){
+                        if ("null".equals(String.valueOf(field.get(item)))) {
                             return "";
                         }
-                        if(field.getName().equalsIgnoreCase("silindi")){
-                            return  "true".equals(  String.valueOf(field.get(item))) ? "Pasif" : "Aktif";
+                        if (field.getName().equalsIgnoreCase("silindi")) {
+                            return "true".equals(String.valueOf(field.get(item))) ? "Pasif" : "Aktif";
                         }
-                        if (field.getType().equals(Boolean.class)||field.getType().equals(boolean.class)){
-                            return  "true".equals(  String.valueOf(field.get(item))) ? "Var" : "";
+                        if (field.getType().equals(Boolean.class) || field.getType().equals(boolean.class)) {
+                            return "true".equals(String.valueOf(field.get(item))) ? "Var" : "";
                         }
-                        if(field.getType().equals(LocalDateTime.class)){
+                        if (field.getType().equals(LocalDateTime.class)) {
                             try {
-                                return  ((LocalDateTime)field.get(item)).format(Pattern.DATE_TIME_FORMATTER);
-                            }catch (Exception e){}
+                                return ((LocalDateTime) field.get(item)).format(Pattern.DATE_TIME_FORMATTER);
+                            } catch (Exception e) {
+                            }
                         }
                         return String.valueOf(field.get(item));
                     } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -243,16 +251,16 @@ public class ExporterServiceImpl implements ExporterService {
         }
     }
 
-    private List<String> gethaderNames( List<String> fields){
-        if (CollectionUtils.isEmpty(fields))return fields;
+    private List<String> gethaderNames(List<String> fields) {
+        if (CollectionUtils.isEmpty(fields)) return fields;
 
-        List<String> headerNames=new ArrayList<>();
-        fields.forEach(fieldName->{
-            String headerName =null;
-            try{
-                headerName= messageSource.getMessage(fieldName,null, Locale.getDefault());
-            }catch (NoSuchMessageException e){
-                headerName=fieldName;
+        List<String> headerNames = new ArrayList<>();
+        fields.forEach(fieldName -> {
+            String headerName = null;
+            try {
+                headerName = messageSource.getMessage(fieldName, null, Locale.getDefault());
+            } catch (NoSuchMessageException e) {
+                headerName = fieldName;
             }
             headerNames.add(headerName);
         });
@@ -263,7 +271,7 @@ public class ExporterServiceImpl implements ExporterService {
     @Override
     public <T> ResourceDto exportToCsv(List<T> data, String fileName, List<String> fields) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            try (CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8),
+        try (CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8),
                 CSVFormat.DEFAULT.withHeader(gethaderNames(fields).toArray(new String[0])).withDelimiter(';'))) {// Delimiter olarak noktalı virgül kullanılıyor
             for (T item : data) {
                 List<String> values = getFieldValues(item, fields);
@@ -294,25 +302,25 @@ public class ExporterServiceImpl implements ExporterService {
         }
 
         Resource resource = new ByteArrayResource(outputStream.toByteArray());
-        return new ResourceDto(resource , MediaType.parseMediaType("application/json; charset=UTF-8"),fileName );
+        return new ResourceDto(resource, MediaType.parseMediaType("application/json; charset=UTF-8"), fileName);
     }
 
     private <T> String generateJsonString(T item, List<String> fields) throws JsonProcessingException {
         return objectMapper.writeValueAsString(
-            fields.stream()
-                .collect(Collectors.toMap(
-                    field -> field,
-                    field -> {
-                        try {
-                            Field tempField = getField( item.getClass(),field);
-                            tempField.setAccessible(true); // Erişim yetkisini ayarla
-                            return tempField.get(item);
-                        } catch (NoSuchFieldException | IllegalAccessException e) {
-                            e.printStackTrace();
-                            return null;
-                        }
-                    })
-                )
+                fields.stream()
+                        .collect(Collectors.toMap(
+                                field -> field,
+                                field -> {
+                                    try {
+                                        Field tempField = getField(item.getClass(), field);
+                                        tempField.setAccessible(true); // Erişim yetkisini ayarla
+                                        return tempField.get(item);
+                                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                                        e.printStackTrace();
+                                        return null;
+                                    }
+                                })
+                        )
         );
     }
 
@@ -321,72 +329,72 @@ public class ExporterServiceImpl implements ExporterService {
         // Excel'i oluştur ve oku
         ResourceDto excelResource = exportToExcel(data, fileName, fields);
 
-            try (ByteArrayInputStream excelStream = new ByteArrayInputStream(excelResource.getResource().getInputStream().readAllBytes());
-                 Workbook workbook = new XSSFWorkbook(excelStream);
-                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        try (ByteArrayInputStream excelStream = new ByteArrayInputStream(excelResource.getResource().getInputStream().readAllBytes());
+             Workbook workbook = new XSSFWorkbook(excelStream);
+             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
-                // Word belgesi oluştur
-                XWPFDocument document = new XWPFDocument();
+            // Word belgesi oluştur
+            XWPFDocument document = new XWPFDocument();
 
-                // Eğer sütun sayısı 2'den fazla ise A3 yatay formatına geç
-                Sheet sheet = workbook.getSheetAt(0);
-                int numberOfColumns = sheet.getRow(0).getPhysicalNumberOfCells();
+            // Eğer sütun sayısı 2'den fazla ise A3 yatay formatına geç
+            Sheet sheet = workbook.getSheetAt(0);
+            int numberOfColumns = sheet.getRow(0).getPhysicalNumberOfCells();
 
-                if (numberOfColumns > 2) {
-                    // A3 boyutunda ve yatay mod için gerekli sayfa ayarları
-                    CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
-                    XWPFParagraph para = document.createParagraph();
-                    para.setPageBreak(true); // Sayfa sonu eklemek için
+            if (numberOfColumns > 2) {
+                // A3 boyutunda ve yatay mod için gerekli sayfa ayarları
+                CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
+                XWPFParagraph para = document.createParagraph();
+                para.setPageBreak(true); // Sayfa sonu eklemek için
 
-                    CTPageSz pageSize = sectPr.addNewPgSz();
-                    pageSize.setOrient(STPageOrientation.LANDSCAPE); // Yatay mod
-                    pageSize.setW(BigInteger.valueOf(16840)); // A3 genişlik
-                    pageSize.setH(BigInteger.valueOf(11900)); // A3 yükseklik
-                }
+                CTPageSz pageSize = sectPr.addNewPgSz();
+                pageSize.setOrient(STPageOrientation.LANDSCAPE); // Yatay mod
+                pageSize.setW(BigInteger.valueOf(16840)); // A3 genişlik
+                pageSize.setH(BigInteger.valueOf(11900)); // A3 yükseklik
+            }
 
-                // Word tablosunu oluşturun, ilk satırı manuel ekliyoruz
-                XWPFTable table = document.createTable(1, numberOfColumns);
+            // Word tablosunu oluşturun, ilk satırı manuel ekliyoruz
+            XWPFTable table = document.createTable(1, numberOfColumns);
 
-                // Kenarlıkları ayarla (tüm hücreler için)
-                setTableBorders(table);
+            // Kenarlıkları ayarla (tüm hücreler için)
+            setTableBorders(table);
 
-                // Header satırı oluştur, ilk satırı al ve tüm sütunlara header ekle
-                Row firstRow = sheet.getRow(0);
-                XWPFTableRow headerRow = table.getRow(0);  // İlk satır (Header)
+            // Header satırı oluştur, ilk satırı al ve tüm sütunlara header ekle
+            Row firstRow = sheet.getRow(0);
+            XWPFTableRow headerRow = table.getRow(0);  // İlk satır (Header)
+
+            for (int colIndex = 0; colIndex < numberOfColumns; colIndex++) {
+                Cell excelCell = firstRow.getCell(colIndex);
+                XWPFTableCell wordCell = headerRow.getCell(colIndex);
+                wordCell.setText(getCellValue(excelCell));
+                setCellStyle(wordCell);  // Hücre stilini ayarla
+            }
+
+            // Verileri ekle: Excel'deki satırları oku ve tabloya ekle
+            for (int rowIndex = 1; rowIndex < sheet.getPhysicalNumberOfRows(); rowIndex++) {
+                Row excelRow = sheet.getRow(rowIndex);
+                XWPFTableRow wordRow = table.createRow();  // Her veri satırı için yeni satır oluştur
 
                 for (int colIndex = 0; colIndex < numberOfColumns; colIndex++) {
-                    Cell excelCell = firstRow.getCell(colIndex);
-                    XWPFTableCell wordCell = headerRow.getCell(colIndex);
+                    Cell excelCell = excelRow.getCell(colIndex);
+                    XWPFTableCell wordCell = wordRow.getCell(colIndex);
+                    if (wordCell == null) {
+                        wordCell = wordRow.addNewTableCell();  // Yeni hücre oluştur
+                    }
                     wordCell.setText(getCellValue(excelCell));
                     setCellStyle(wordCell);  // Hücre stilini ayarla
                 }
-
-                // Verileri ekle: Excel'deki satırları oku ve tabloya ekle
-                for (int rowIndex = 1; rowIndex < sheet.getPhysicalNumberOfRows(); rowIndex++) {
-                    Row excelRow = sheet.getRow(rowIndex);
-                    XWPFTableRow wordRow = table.createRow();  // Her veri satırı için yeni satır oluştur
-
-                    for (int colIndex = 0; colIndex < numberOfColumns; colIndex++) {
-                        Cell excelCell = excelRow.getCell(colIndex);
-                        XWPFTableCell wordCell = wordRow.getCell(colIndex);
-                        if (wordCell == null) {
-                            wordCell = wordRow.addNewTableCell();  // Yeni hücre oluştur
-                        }
-                        wordCell.setText(getCellValue(excelCell));
-                        setCellStyle(wordCell);  // Hücre stilini ayarla
-                    }
-                }
-
-                // Word belgesini çıktı olarak yaz
-                document.write(outputStream);
-
-                // Word dosyasını ResourceDto olarak döndür
-                Resource wordResource = new ByteArrayResource(outputStream.toByteArray());
-                return new ResourceDto(wordResource, MediaType.APPLICATION_OCTET_STREAM, fileName + ".docx");
-
-            } catch (IOException e) {
-                throw new RuntimeException("Excel'den Word'e dönüştürme sırasında hata oluştu", e);
             }
+
+            // Word belgesini çıktı olarak yaz
+            document.write(outputStream);
+
+            // Word dosyasını ResourceDto olarak döndür
+            Resource wordResource = new ByteArrayResource(outputStream.toByteArray());
+            return new ResourceDto(wordResource, MediaType.APPLICATION_OCTET_STREAM, fileName + ".docx");
+
+        } catch (IOException e) {
+            throw new RuntimeException("Excel'den Word'e dönüştürme sırasında hata oluştu", e);
+        }
     }
 
     // Hücredeki değeri almak için yardımcı metod
@@ -410,6 +418,7 @@ public class ExporterServiceImpl implements ExporterService {
                 return "";
         }
     }
+
     private void setTableBorders(XWPFTable table) {
         table.setInsideHBorder(XWPFTable.XWPFBorderType.SINGLE, 1, 0, "000000");
         table.setInsideVBorder(XWPFTable.XWPFBorderType.SINGLE, 1, 0, "000000");

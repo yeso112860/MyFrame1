@@ -2,7 +2,7 @@ import {useFormik} from "formik"
 import * as Yup from "yup";
 import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog"
-import {Task, TaskPriority, TaskStatus} from "~/utilities/types/models";
+import {Task, TaskPriority} from "~/utilities/types/models";
 import {LoadingQueueContext} from "~/store/loadingContext";
 import {useContext} from "react";
 import {useTaskHook} from "~/hooks/useTaskHook";
@@ -20,7 +20,7 @@ interface TaskDialogProps {
 
 export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
     const {addLoading, removeLoading} = useContext(LoadingQueueContext);
-    const {newTask, fetchPeople} = useTaskHook();
+    const {fetchStatuses, newTask, fetchPeople} = useTaskHook();
     const validationSchema = Yup.object({
         priority: Yup.string().required("Görev Önceliği Zorunlu alan"),
         title: Yup.string().required("Görev Tanımı Zorunlu alan"),
@@ -28,7 +28,7 @@ export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
         dueDate: Yup.string().required("Görev Teslim Tarihi Zorunlu alan"),
         assignedBy: Yup.object().required("Görevi Atayan Zorunlu alan"),
         assignedTo: Yup.object().required("Görev Atanan Zorunlu alan"),
-        status: Yup.string().required("Görev Durumu Zorunlu alan"),
+        status: Yup.object().required("Görev Durumu Zorunlu alan"),
         //status: Yup.number().typeError("Servis Versiyonu Alanı sadece sayı olmalıdır"),
     });
     const formik = useFormik({
@@ -159,7 +159,7 @@ export const NewTaskDialog = ({isVisible, hideDialog}: TaskDialogProps) => {
         </div>
         <div className="field">
             <label htmlFor="status">Durumu</label>
-            <Dropdown id="status" value={formik.values?.status} options={Object.values(TaskStatus)} required
+            <Dropdown id="status" value={formik.values?.status} options={fetchStatuses.data} required
                       optionLabel="label"
                       className={classNames("w-full", {"p-invalid": isFormFieldInvalid("status")})}
                       onChange={formik.handleChange}/>

@@ -11,6 +11,8 @@ import tr.org.turksat.common.contoller.BaseController;
 import tr.org.turksat.common.model.dto.BaseRequestDto;
 import tr.org.turksat.common.model.dto.BaseResponseDto;
 
+import java.util.UUID;
+
 @RestController
 public class TaskControllerImpl extends BaseController<TaskService, TaskDto, TaskRequestDto, TaskResponseDto> implements TaskController {
 
@@ -28,12 +30,12 @@ public class TaskControllerImpl extends BaseController<TaskService, TaskDto, Tas
     }
 
     @Override
-    public ResponseEntity<BaseResponseDto> taskSil(BaseRequestDto<Long> baseRequestDto) {
+    public ResponseEntity<BaseResponseDto> taskSil(BaseRequestDto<UUID> baseRequestDto) {
         return super.sil(baseRequestDto);
     }
 
     @Override
-    public ResponseEntity<BaseResponseDto> taskSilByMetaveriServisBilgileriId(BaseRequestDto<Long> baseRequestDto) {
+    public ResponseEntity<BaseResponseDto> taskSilByMetaveriServisBilgileriId(BaseRequestDto<UUID> baseRequestDto) {
         return null;
     }
 
@@ -43,7 +45,7 @@ public class TaskControllerImpl extends BaseController<TaskService, TaskDto, Tas
     }
 
     @Override
-    public ResponseEntity<BaseResponseDto<TaskResponseDto>> getTaskById(BaseRequestDto<Long> baseRequestDto) {
+    public ResponseEntity<BaseResponseDto<TaskResponseDto>> getTaskById(BaseRequestDto<UUID> baseRequestDto) {
         return super.bul(baseRequestDto);
     }
 

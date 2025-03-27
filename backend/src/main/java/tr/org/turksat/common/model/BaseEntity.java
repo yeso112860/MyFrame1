@@ -14,8 +14,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @MappedSuperclass
 @EntityListeners({AuditingEntityListener.class})
@@ -25,28 +25,27 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @SoftDelete(columnName = "silindi")
-public abstract class BaseEntity implements Persistable<Long> {
+public abstract class BaseEntity implements Persistable<UUID> {
     @Id
-    @TableGenerator(name = "hibernate_sequences", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "hibernate_sequences")
+    @GeneratedValue
     @Column(name = "id", nullable = false)
-    private Long id;
+    private UUID id;
 
-    @Column(name = "olusturulma_zamani", nullable = false, updatable = false)
+    @Column(name = "olusturulma_tarihi", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime olusturulmaTarihi;
 
-    @Column(name = "son_guncelleme_zamani")
+    @Column(name = "degistirilme_tarihi")
     @LastModifiedDate
     private LocalDateTime guncellenmeTarihi;
 
-    @Column(name = "olusturan_kullanici_id", nullable = false, updatable = false)
+    @Column(name = "olusturan_kisi", nullable = false, updatable = false)
     @CreatedBy
-    private Long olusturanKullaniciId;
+    private String olusturanKullanici;
 
-    @Column(name = "son_guncelleyen_kullanici_id")
+    @Column(name = "degistiren_kisi")
     @LastModifiedBy
-    private Long guncelleyenKullaniciId;
+    private String guncelleyenKullanici;
 
 //    @Column(name = "silindi", nullable = false)
 //    private boolean silindi = false;

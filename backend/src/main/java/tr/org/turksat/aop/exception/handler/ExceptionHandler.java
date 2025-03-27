@@ -43,8 +43,8 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
 //    @org.springframework.web.bind.annotation.ExceptionHandler(MaxUploadSizeExceededException.class)
 
-   @Override
-   public ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException exception, HttpHeaders headers, HttpStatusCode status,final WebRequest request) {
+    @Override
+    public ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException exception, HttpHeaders headers, HttpStatusCode status, final WebRequest request) {
         final String bodyOfResponse = messageSource.getMessage(MessageConstant.LOG0004, null, request.getLocale());
         log.error(messageSource.getMessage(MessageConstant.LOG0004, null, request.getLocale()), exception);
         return handleExceptionInternal(exception, bodyOfResponse, new HttpHeaders(), HttpStatus.REQUEST_HEADER_FIELDS_TOO_LARGE, request);
@@ -73,7 +73,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
             String errorMsg = fieldError.getDefaultMessage();
             BusinessException errorDetails = new BusinessException(errorMsg, HttpStatus.BAD_REQUEST, path.substring(index));
             final String bodyOfResponse = errorDetails.getMessage(messageSource, request.getLocale());
-            log.error( bodyOfResponse +" "+request.toString() );
+            log.error(bodyOfResponse + " " + request);
             return handleExceptionInternal(errorDetails, bodyOfResponse, headers, errorDetails.getErrorCode(), request);
         } else
             return super.handleMethodArgumentNotValid(ex, headers, status, request);

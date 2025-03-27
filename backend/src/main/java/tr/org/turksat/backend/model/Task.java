@@ -30,16 +30,16 @@ public class Task extends BaseEntity {
     private @NotNull
     @Column(columnDefinition = "datetime") ZonedDateTime dueDate;
     private @NotNull
-    @Enumerated(value = EnumType.STRING)
-    @Column(columnDefinition = "text") TaskPriority priority;
+    @Enumerated(value = EnumType.STRING) TaskPriority priority;
     private @NotNull int progress;
     private @Column(columnDefinition = "json")
-    @JdbcTypeCode(SqlTypes.JSON) @ShallowReference List<Comment> comments = new ArrayList<>();
+    @JdbcTypeCode(SqlTypes.JSON) List<Comment> comments = new ArrayList<>();
     private @Column(columnDefinition = "json")
-    @JdbcTypeCode(SqlTypes.JSON) @ShallowReference List<TaskHistory> history = new ArrayList<>();
-    private @ManyToOne @ShallowReference Kullanici assignedBy;
-    private @ManyToOne @ShallowReference Kullanici assignedTo;
-    private @NotNull
-    @Enumerated(value = EnumType.STRING)
-    @Column(columnDefinition = "text") TaskStatus status;
+    @JdbcTypeCode(SqlTypes.JSON) List<TaskHistory> history = new ArrayList<>();
+    private @ManyToOne
+    @ShallowReference Kullanici assignedBy;
+    private @ManyToOne
+    @ShallowReference Kullanici assignedTo;
+    private @ManyToOne
+    @ShallowReference ParamStatus status;
 }

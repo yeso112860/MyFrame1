@@ -8,7 +8,9 @@ import tr.org.turksat.backend.model.Task;
 import tr.org.turksat.backend.repository.custom.TaskCustomRepository;
 import tr.org.turksat.common.repository.BaseRepository;
 
+import java.util.UUID;
+
 @Repository
 @JaversSpringDataAuditable
-public interface TaskRepository extends JpaRepository<Task, Long>, QuerydslPredicateExecutor<Task>, TaskCustomRepository, BaseRepository<Task, Long> {
+public interface TaskRepository extends JpaRepository<Task, UUID>, QuerydslPredicateExecutor<Task>, TaskCustomRepository, BaseRepository<Task, UUID> {
 }

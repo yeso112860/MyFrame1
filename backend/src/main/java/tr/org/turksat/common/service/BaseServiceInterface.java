@@ -7,11 +7,13 @@ import tr.org.turksat.common.model.dto.*;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
-public interface BaseServiceInterface <DtoType extends BaseDto,RequestDtoType,ResponseDtoType>{
+public interface BaseServiceInterface<DtoType extends BaseDto, RequestDtoType, ResponseDtoType> {
 
     /**
      * Service'te kullanılacak kaydet methodu.
+     *
      * @param dto repository katmanına taşınacak Dto
      * @return repository katmanından dönen Dto
      */
@@ -35,40 +37,51 @@ public interface BaseServiceInterface <DtoType extends BaseDto,RequestDtoType,Re
 
     /**
      * Service'te kullanılacak sil methodu.
+     *
      * @param dtoList repository katmanına taşınacak Dto list
      */
     void sil(List<DtoType> dtoList);
 
     /**
      * Service'te kullanılacak sil methodu.
+     *
      * @param uid repository katmanına taşınacak Entity UUID
      */
-    void sil(Long uid);
+    void sil(UUID uid);
 
-    BaseResponseDto sil(BaseRequestDto<Long> baseRequestDto);
+    BaseResponseDto sil(BaseRequestDto<UUID> baseRequestDto);
 
     /**
      * Service'te kullanılacak bul methodu.
+     *
      * @param id repository katmanına taşınacak Entity UUID
      * @return repository katmanından dönen Dto
      */
-    DtoType bul(Long id);
+    DtoType bul(UUID id);
 
-    BaseResponseDto bul(BaseRequestDto<Long> baseRequestDto);
+    BaseResponseDto bul(BaseRequestDto<UUID> baseRequestDto);
 
     List<DtoType> hepsiniBul();
+
     List<DtoType> hepsiniBul(int page, int size);
+
     List<DtoType> hepsiniBul(Predicate predicate, int page, int size);
+
     List<DtoType> hepsiniBul(Specification specification, Pageable pageable);
+
     List<DtoType> hepsiniBul(SearchObject object);
+
     BaseResponseDto<List<ResponseDtoType>> hepsiniBul(BaseRequestDto<RequestDtoType> baseRequestDto);
+
     BaseResponseDto<List<ResponseDtoType>> aktifHepsiniBul(BaseRequestDto<RequestDtoType> baseRequestDto);
 
     long say();
+
     BaseResponseDto createResponseDto(BaseRequestDto baseRequestDto, Object object, long count, String message, Boolean successStatus);
 
     ResourceDto export(BaseRequestDto baseRequestDto);
-    ResourceDto export(BaseRequestDto baseRequestDto,List<DtoType> dtoList );
+
+    ResourceDto export(BaseRequestDto baseRequestDto, List<DtoType> dtoList);
 
     List<HistoryDto> getHistory(BaseRequestDto<HistoryDto> baseRequestDto);
 }

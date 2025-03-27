@@ -14,16 +14,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Objects;
 
-@NoArgsConstructor(access =  AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateConverterUtil {
 
-    public static String isoLocalDateToIsoLocalDateWithSlash(LocalDate tarih){
+    public static String isoLocalDateToIsoLocalDateWithSlash(LocalDate tarih) {
         Objects.requireNonNull(tarih, "tarih");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Pattern.ISO_LOCAL_DATE_WITH_SLASH);
         return formatter.format(tarih);
     }
 
-    public static LocalDate toLocalDateWithPattern(String tarih, String pattern){
+    public static LocalDate toLocalDateWithPattern(String tarih, String pattern) {
         Objects.requireNonNull(tarih, "tarih");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return LocalDate.parse(tarih, formatter);
@@ -38,14 +38,14 @@ public class DateConverterUtil {
         // Convert timestamp to LocalDateTime
         LocalDateTime localDateTime = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
         // Format the LocalDateTime using the formatter
-        return  localDateTime.format(Pattern.DATE_TIME_FORMATTER);
+        return localDateTime.format(Pattern.DATE_TIME_FORMATTER);
     }
 
     public static String timeStringToString(String timeString) {
         try { //"2024-10-17T13:35:30.136833500";
             LocalDateTime dateTime = LocalDateTime.parse(timeString, Pattern.DATE_TIME_FORMATTER);
             return dateTime.format(Pattern.DATE_TIME_FORMATTER);
-        }catch (Exception e){
+        } catch (Exception e) {
             return timeString;
         }
     }
@@ -74,15 +74,15 @@ public class DateConverterUtil {
     public static String convertDateStrToAnotherDateStr(String dateString, SimpleDateFormat inputFormatter, SimpleDateFormat outputFormatter) {
         try {
             Date date = inputFormatter.parse(dateString);
-            return outputFormatter.format(date );
+            return outputFormatter.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
             return "dateString";
         }
     }
 
-    public static String convertDatetoStr(Date date,SimpleDateFormat outputFormatter){
-        return outputFormatter.format(date );
+    public static String convertDatetoStr(Date date, SimpleDateFormat outputFormatter) {
+        return outputFormatter.format(date);
     }
 
 }

@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface ExporterService {
 
-    <T> ResourceDto export(BaseRequestDto baseRequestDto, List<T>  dtoList, String fileName);
+    <T> ResourceDto export(BaseRequestDto baseRequestDto, List<T> dtoList, String fileName);
 
-     <T> ResourceDto exportToExcel(List<T> data, String fileName, List<String> fields) throws IllegalAccessException;
+    <T> ResourceDto exportToExcel(List<T> data, String fileName, List<String> fields) throws IllegalAccessException;
 
     <T> ResourceDto convertExcelToPdf(List<T> data, String fileName, List<String> fields) throws IllegalAccessException;
 
