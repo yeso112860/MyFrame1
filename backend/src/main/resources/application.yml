@@ -29,7 +29,7 @@ app:
     allowed-origins: http://localhost:3000
 javers:
   mongodb:
-    uri: mongodb://localhost:27017/moviesdb
+    uri: mongodb://localhost:27017/profit-react-mongodb
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
