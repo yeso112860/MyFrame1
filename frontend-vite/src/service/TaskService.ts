@@ -1,6 +1,7 @@
 import {Parameter, Task} from "~/utilities/types/models.ts";
 import {apiBaseURL} from "~/utilities/constants";
 import axios from "axios";
+import {ExportTable} from "~/utilities/utils.ts";
 
 class TaskService {
     getTasks = async (): Promise<Task[]> => {
@@ -27,8 +28,22 @@ class TaskService {
             return response.data;
         } else return {}
     }
-    exportTasks = async () => {
-         axios.get(`${apiBaseURL}/api/changeit/export`).then(response => response.data);
+    exportTasks = async ({ exportType, fields }) => {
+        const response = await axios.post(`${apiBaseURL}/api/changeit/export`,{
+            // selectedId,
+            // sortList,
+            // filters,
+            exportType: exportType,
+            fieldNames:fields,
+            // stringSearchKey,
+        },{
+             responseType: "arraybuffer",
+         });
+        ExportTable(
+            response.data,
+            `Görevler.${exportType === "excel" ? "xlsx" : exportType === "word" ? "docx" : exportType}`,
+            "application/octet-stream",
+        );
     }
 }
 

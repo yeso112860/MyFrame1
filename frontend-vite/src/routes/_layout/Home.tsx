@@ -18,6 +18,7 @@ import {OverlayPanel} from "primereact/overlaypanel";
 import {Tag} from "primereact/tag";
 import {Avatar} from "primereact/avatar";
 import {AvatarGroup} from "primereact/avatargroup";
+import {Menu} from "primereact/menu";
 
 const Home = () => {
     const [newDialogVisible, setNewDialogVisible] = useState(false);
@@ -29,6 +30,7 @@ const Home = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef<DataTable<Task[]>>(null);
     const cm = useRef<ContextMenu>(null);
+    const exportMenuRef = useRef<OverlayPanel>(null);
 
     function hideNewDialog() {
         setNewDialogVisible(false);
@@ -51,9 +53,50 @@ const Home = () => {
     };
 
     const rightToolbarTemplate = () => {
+        const cols = ["title","description","priority", "dueDate", "assignedBy", "assignedTo", "status"];
         return (
             <>
-                <Button label="Export" icon="pi pi-excel" severity="help" onClick={taskApi.exportTasks}/>
+                <Button
+                    outlined
+                    severity="secondary"
+                    icon="pi pi-external-link"
+                    label="Dışa Aktar"
+                    onClick={exportMenuRef?.current?.toggle}
+                />
+                <OverlayPanel ref={exportMenuRef} unstyled>
+                    <Menu
+                        model={[
+                            {
+                                label: "CSV Dışa Aktar",
+                                command: () => {
+                                    taskApi.exportTasks({exportType: 'csv', fields: cols})
+                                    exportMenuRef?.current?.toggle();
+                                }
+                            },
+                            {
+                                label: "PDF Dışa Aktar",
+                                command: () => {
+                                    taskApi.exportTasks({exportType: 'pdf', fields: cols})
+                                    exportMenuRef?.current?.toggle();
+                                }
+                            },
+                            {
+                                label: "Excel Dışa Aktar",
+                                command: () => {
+                                    taskApi.exportTasks({exportType: 'excel', fields: cols})
+                                    exportMenuRef?.current?.toggle();
+                                }
+                            },
+                            {
+                                label: "Word Dışa Aktar",
+                                command: () => {
+                                    taskApi.exportTasks({exportType: 'word', fields: cols})
+                                    exportMenuRef?.current?.toggle();
+                                }
+                            },
+                        ]}
+                    />
+                </OverlayPanel>
             </>
         );
     };
@@ -198,8 +241,9 @@ const Home = () => {
                     </div>
                 </div>
                 {newDialogVisible ? <NewTaskDialog isVisible={newDialogVisible} hideDialog={hideNewDialog}/> : null}
-                {editDialogVisible ?
-                    <EditTaskDialog isVisible={editDialogVisible} hideDialog={hideEditDialog} task={task} disabled={dialogDisabled}/> : null}
+                {editDialogVisible && task ?
+                    <EditTaskDialog isVisible={editDialogVisible} hideDialog={hideEditDialog} task={task}
+                                    disabled={dialogDisabled}/> : null}
             </div>
         </div>
     );

@@ -1,9 +1,6 @@
 package tr.org.turksat.backend.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -14,4 +11,9 @@ import java.util.UUID;
 public class ParameterDto {
     UUID id;
     String label;
+
+    @Override
+    public String toString() {
+        return label;
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import tr.org.turksat.backend.model.dto.ParameterDto;
 import tr.org.turksat.backend.model.dto.TaskDto;
 import tr.org.turksat.backend.service.SampleService;
+import tr.org.turksat.common.model.dto.BaseRequestDto;
 import tr.org.turksat.common.model.dto.BaseResponseDto;
 import tr.org.turksat.common.model.dto.ResourceDto;
 
@@ -65,11 +66,11 @@ public class SampleController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/export")
-    public ResponseEntity<Resource> getExportTasks() {
-        ResourceDto resourceDto = sampleService.exportTasks();
+    @PostMapping("/export")
+    public ResponseEntity<Resource> getExportTasks(@RequestBody BaseRequestDto<TaskDto> baseRequestDto) {
+        ResourceDto resourceDto = sampleService.export(baseRequestDto);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Disposition", "attachment; filename=" + resourceDto.getFileName() + "." + resourceDto.getMediaType().getSubtype());
+        httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + resourceDto.getFileName() + "." + resourceDto.getMediaType().getSubtype());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(resourceDto.getMediaType())

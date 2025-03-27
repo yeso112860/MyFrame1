@@ -2,11 +2,13 @@ package tr.org.turksat.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import tr.org.turksat.backend.model.Kullanici;
 import tr.org.turksat.backend.model.Task;
 import tr.org.turksat.backend.model.dto.KullaniciDto;
 import tr.org.turksat.backend.model.dto.ParameterDto;
 import tr.org.turksat.backend.model.dto.TaskDto;
+import tr.org.turksat.backend.model.dto.TaskRequestDto;
 import tr.org.turksat.backend.model.mapper.KullaniciMapper;
 import tr.org.turksat.backend.model.mapper.TaskMapper;
 import tr.org.turksat.backend.repository.KullaniciRepository;
@@ -75,11 +77,14 @@ public class SampleService {
         return taskRepository.getPeople();
     }
 
-    public ResourceDto exportTasks() {
+    public ResourceDto export(BaseRequestDto<TaskDto> requestDto) {
+        if (CollectionUtils.isEmpty(requestDto.getFieldNames())) {
+            return null;
+        }
+        Class<Task> entityTypeClass = Task.class;
+        requestDto.setPage(0);
+        requestDto.setSize(Integer.MAX_VALUE);
         List<TaskDto> allDto = taskRepository.findAllDto();
-        BaseRequestDto requestDto = BaseRequestDto.builder().
-                fieldNames(List.of("id", "title", "description")).
-                exportType("excel").build();
-        return exporterService.export(requestDto, allDto, "");
+        return exporterService.export(requestDto, allDto, "out.xlsx");
     }
 }
