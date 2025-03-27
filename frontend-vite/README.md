@@ -15,6 +15,6 @@
 - [Swagger](https://swagger.io/)
 - Dosya yönetimi (Minio veya alternatif)
 - Mailing
-- Logging (Javers)
+- ~~Logging (Javers)~~
 - PDF generation
 - ~~Queue? (Rabbit/Kafka)~~
