@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.javers.core.metamodel.annotation.ShallowReference;
 import tr.org.turksat.backend.model.Interfaces.OrganisationalEntity;
 import tr.org.turksat.common.model.BaseEntity;
 
@@ -22,9 +23,11 @@ public class Kullanici extends BaseEntity implements OrganisationalEntity {
     private String soyad;
     private boolean enabled = true;
     private @Column(name = "eposta", length = 100)String ePosta;
-    @Column(name = "resim_id")
-    private Long resimId;
-    private @ManyToOne Birim birim;
-    @Column(name = "unvan")
-    private String unvan;
+    private @Column(name = "resim_id") Long resimId;
+    private @ManyToOne @ShallowReference Birim birim;
+    private @Column(name = "unvan")String unvan;
+    @ManyToOne
+    @JoinColumn(name = "organizasyon_id")
+    @ShallowReference
+    private Organizasyon organizasyon;
 }

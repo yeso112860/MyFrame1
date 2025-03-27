@@ -22,4 +22,10 @@ public class JpaConfiguration {
         return (properties) -> properties.put(AvailableSettings.JSON_FORMAT_MAPPER,
                 new JacksonJsonFormatMapper(objectMapper));
     }
+
+    // bu zaten çalışıyor
+//    @Bean
+//    public AuthorProvider authorProvider() {
+//        return new SpringSecurityAuthorProvider();
+//    }
 }

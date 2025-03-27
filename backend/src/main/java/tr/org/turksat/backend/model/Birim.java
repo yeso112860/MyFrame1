@@ -10,6 +10,8 @@ import org.hibernate.annotations.*;
 
 import jakarta.persistence.*;
 import org.hibernate.type.SqlTypes;
+import org.javers.core.metamodel.annotation.DiffIgnore;
+import org.javers.core.metamodel.annotation.ShallowReference;
 import tr.org.turksat.backend.model.Interfaces.OrganisationalEntity;
 import tr.org.turksat.common.model.BaseEntity;
 
@@ -33,6 +35,7 @@ public class Birim extends BaseEntity implements OrganisationalEntity {
     private String kisaAd;
 
     @ManyToOne
+    @ShallowReference
     @JoinColumn(name = "ust_birim_id")
     private Birim ustBirim;
 
@@ -62,7 +65,13 @@ public class Birim extends BaseEntity implements OrganisationalEntity {
 
     @OneToMany(mappedBy = "ustBirim")
     @OrderBy("ad")
+    @DiffIgnore
     private List<Birim> altBirimler = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "organizasyon_id")
+    @ShallowReference
+    private Organizasyon organizasyon;
 
     @Formula("(SELECT COUNT(*) FROM birim f WHERE f.silindi=false and id = f.ust_birim_id )")
     private long childCount;

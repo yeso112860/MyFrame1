@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.javers.core.metamodel.annotation.ShallowReference;
 import tr.org.turksat.common.model.BaseEntity;
 
 import java.time.ZonedDateTime;
@@ -33,11 +34,11 @@ public class Task extends BaseEntity {
     @Column(columnDefinition = "text") TaskPriority priority;
     private @NotNull int progress;
     private @Column(columnDefinition = "json")
-    @JdbcTypeCode(SqlTypes.JSON) List<Comment> comments = new ArrayList<>();
+    @JdbcTypeCode(SqlTypes.JSON) @ShallowReference List<Comment> comments = new ArrayList<>();
     private @Column(columnDefinition = "json")
-    @JdbcTypeCode(SqlTypes.JSON) List<TaskHistory> history = new ArrayList<>();
-    private @ManyToOne Kullanici assignedBy;
-    private @ManyToOne Kullanici assignedTo;
+    @JdbcTypeCode(SqlTypes.JSON) @ShallowReference List<TaskHistory> history = new ArrayList<>();
+    private @ManyToOne @ShallowReference Kullanici assignedBy;
+    private @ManyToOne @ShallowReference Kullanici assignedTo;
     private @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(columnDefinition = "text") TaskStatus status;

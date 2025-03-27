@@ -24,11 +24,12 @@ jwt:
     converter:
       resource-id: projem-task
       principal-attribute: preferred_username
-
 app:
   cors:
     allowed-origins: http://localhost:3000
-
+javers:
+  mongodb:
+    uri: mongodb://localhost:27017/moviesdb
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
