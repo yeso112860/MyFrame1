@@ -125,6 +125,7 @@ dist
 .idea
 .DS_Store
 .vite
+minio
 
 # yarn v2
 .yarn/cache

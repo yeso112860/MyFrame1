@@ -36,3 +36,15 @@ logging:
     org.h2.jdbc: debug
 server:
   port: 8080
+framework:
+  modul:
+    adi: Cam
+    numarasi: 1
+    log-etiketi: Çerçeve
+minio:
+  url: http://localhost:30005/
+  accessKey: minio_accessKey
+  secretKey: minio_secretKey
+  bucketName: minio_bucketName
+  acceptable-content-types: application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/x-citrix-jpeg,image/pjpeg,image/x-png,image/png,image/jpeg
+  acceptable-file-types: pdf,docx,doc,jpg,jpeg,png
