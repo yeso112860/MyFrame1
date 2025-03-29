@@ -1,6 +1,7 @@
 package tr.org.turksat.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tr.org.turksat.backend.model.Kullanici;
@@ -14,7 +15,9 @@ import tr.org.turksat.backend.model.mapper.TaskMapper;
 import tr.org.turksat.backend.repository.KullaniciRepository;
 import tr.org.turksat.backend.repository.TaskRepository;
 import tr.org.turksat.common.model.dto.BaseRequestDto;
+import tr.org.turksat.common.model.dto.HistoryDto;
 import tr.org.turksat.common.model.dto.ResourceDto;
+import tr.org.turksat.common.service.EntityHistoryService;
 import tr.org.turksat.common.service.ExporterService;
 
 import java.util.List;
@@ -33,6 +36,8 @@ public class SampleService {
     private KullaniciMapper kullaniciMapper;
     @Autowired
     private ExporterService exporterService;
+    @Autowired
+    protected ApplicationContext context;
 
     public List<TaskDto> getTasks() {
         List<TaskDto> dtoList = taskRepository.findAllDto();
@@ -86,5 +91,12 @@ public class SampleService {
         requestDto.setSize(Integer.MAX_VALUE);
         List<TaskDto> allDto = taskRepository.findAllDto();
         return exporterService.export(requestDto, allDto, "out.xlsx");
+    }
+
+    public List<HistoryDto> getHistory(BaseRequestDto<HistoryDto> baseRequestDto) {
+        HistoryDto historyDto = baseRequestDto.getObject();
+        EntityHistoryService entityHistoryService = this.context.getBean(EntityHistoryService.class);
+        List<HistoryDto> cdoSnapshotList = entityHistoryService.getEntityHistory(Task.class, historyDto.getId());
+        return cdoSnapshotList;
     }
 }

@@ -14,6 +14,7 @@ import tr.org.turksat.backend.model.dto.TaskDto;
 import tr.org.turksat.backend.service.SampleService;
 import tr.org.turksat.common.model.dto.BaseRequestDto;
 import tr.org.turksat.common.model.dto.BaseResponseDto;
+import tr.org.turksat.common.model.dto.HistoryDto;
 import tr.org.turksat.common.model.dto.ResourceDto;
 
 import java.util.List;
@@ -77,4 +78,9 @@ public class SampleController {
                 .headers(httpHeaders)
                 .body(resourceDto.getResource());
     }
+    @PostMapping("/history")
+    public ResponseEntity<List<HistoryDto>> getTaskHistory(@RequestBody BaseRequestDto<HistoryDto> baseRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK.value()).body(sampleService.getHistory(baseRequestDto));
+    }
+
 }

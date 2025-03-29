@@ -11,7 +11,7 @@ import {Column} from "primereact/column";
 import {format} from "date-fns";
 import {ConfirmDialog} from "primereact/confirmdialog";
 import {NewTaskDialog} from "~/components/ui/dialog/NewTaskDialog.tsx";
-import {createFileRoute} from "@tanstack/react-router";
+import {createFileRoute, useNavigate} from "@tanstack/react-router";
 import "primeflex/themes/primeone-light.css"
 import {EditTaskDialog} from "~/components/ui/dialog/EditTaskDialog.tsx";
 import {OverlayPanel} from "primereact/overlaypanel";
@@ -19,6 +19,7 @@ import {Tag} from "primereact/tag";
 import {Avatar} from "primereact/avatar";
 import {AvatarGroup} from "primereact/avatargroup";
 import {Menu} from "primereact/menu";
+import {useHistoryHook} from "~/hooks/useHistoryHook.tsx";
 
 const Home = () => {
     const [newDialogVisible, setNewDialogVisible] = useState(false);
@@ -31,6 +32,7 @@ const Home = () => {
     const dt = useRef<DataTable<Task[]>>(null);
     const cm = useRef<ContextMenu>(null);
     const exportMenuRef = useRef<OverlayPanel>(null);
+    const navigate = useNavigate();
 
     function hideNewDialog() {
         setNewDialogVisible(false);
@@ -53,7 +55,7 @@ const Home = () => {
     };
 
     const rightToolbarTemplate = () => {
-        const cols = ["title","description","priority", "dueDate", "assignedBy", "assignedTo", "status"];
+        const cols = ["title", "description", "priority", "dueDate", "assignedBy", "assignedTo", "status"];
         return (
             <>
                 <Button
@@ -161,33 +163,46 @@ const Home = () => {
             return format(new Date(_task.dueDate), "dd.MM.yyyy HH:mm");
         return format(_task.dueDate, "dd.MM.yyyy HH:mm");
     }
+    // const historyColumnBody = (_task: Task) => {
+    //     const op = useRef(null);
+    //     return <>
+    //         <Button link label={(_task.history ? _task.history.length : 0) + ' değişiklik'}
+    //                 onClick={(e) => op.current.toggle(e)}
+    //                 icon="pi pi-history" disabled={!_task.history || _task.history.length === 0}/>
+    //         <OverlayPanel ref={op}>
+    //             <ul>
+    //                 {_task.history && _task.history.map((comment, index) => (
+    //                     <li key={index}>
+    //                         <div
+    //                             className="flex-shrink-0 w-24 text-[9px] text-gray-500">{format(comment.date, "dd.MM.yyyy HH:mm")}</div>
+    //                         <div className="flex-1">
+    //                             <div className="mt-1 text-[10px] text-gray-500 flex items-center gap-1">
+    //                                 <span>{comment.by}:</span>
+    //                             </div>
+    //                             {comment.note && (
+    //                                 <div className="mt-1 text-[10px] text-gray-600">
+    //                                     {comment.note}
+    //                                 </div>
+    //                             )}
+    //                         </div>
+    //                     </li>
+    //                 ))}
+    //             </ul>
+    //         </OverlayPanel>
+    //     </>;
+    // }
+    const {getHistoryById} = useHistoryHook();
     const historyColumnBody = (_task: Task) => {
-        const op = useRef(null);
-        return <>
-            <Button link label={(_task.history ? _task.history.length : 0) + ' değişiklik'}
-                    onClick={(e) => op.current.toggle(e)}
-                    icon="pi pi-history" disabled={!_task.history || _task.history.length === 0}/>
-            <OverlayPanel ref={op}>
-                <ul>
-                    {_task.history && _task.history.map((comment, index) => (
-                        <li key={index}>
-                            <div
-                                className="flex-shrink-0 w-24 text-[9px] text-gray-500">{format(comment.date, "dd.MM.yyyy HH:mm")}</div>
-                            <div className="flex-1">
-                                <div className="mt-1 text-[10px] text-gray-500 flex items-center gap-1">
-                                    <span>{comment.by}:</span>
-                                </div>
-                                {comment.note && (
-                                    <div className="mt-1 text-[10px] text-gray-600">
-                                        {comment.note}
-                                    </div>
-                                )}
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </OverlayPanel>
-        </>;
+        return (
+        <Button link
+                onClick={(e) => {
+                    e.preventDefault();
+                     navigate({
+                         to: `/history/index/task/${_task.id}`,
+                     });
+                }}
+                icon="pi pi-history"/>
+        );
     }
     const avatarColumnBody = (_task: Task) => {
         return (

@@ -1,7 +1,8 @@
-import {createFileRoute, useNavigate} from '@tanstack/react-router'
+import {createFileRoute, ErrorComponentProps, useNavigate} from '@tanstack/react-router'
 import { Button } from 'primereact/button';
 
-const ErrorPage = () => {
+const ErrorPage = (props : ErrorComponentProps) => {
+    console.log('ErrorPage', props);
     const navigate = useNavigate();
 
     return (
@@ -29,6 +30,8 @@ const ErrorPage = () => {
         </div>
     );
 };
+
+export default ErrorPage;
 
 export const Route = createFileRoute('/_no-layout/ErrorPage')({
     component: ErrorPage,

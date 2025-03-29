@@ -24,6 +24,7 @@ import { Route as LayoutDocumentationImport } from './routes/_layout/documentati
 import { Route as LayoutHomeImport } from './routes/_layout/Home'
 import { Route as LayoutEmptyImport } from './routes/_layout/Empty'
 import { Route as LayoutDragDropImport } from './routes/_layout/DragDrop'
+import { Route as LayoutHistoryIndexPathIdImport } from './routes/_layout/history/index.$path.$id'
 
 // Create/Update Routes
 
@@ -100,6 +101,12 @@ const LayoutEmptyRoute = LayoutEmptyImport.update({
 const LayoutDragDropRoute = LayoutDragDropImport.update({
   id: '/DragDrop',
   path: '/DragDrop',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutHistoryIndexPathIdRoute = LayoutHistoryIndexPathIdImport.update({
+  id: '/history/index/$path/$id',
+  path: '/history/index/$path/$id',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -198,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NoLayoutLogoutImport
       parentRoute: typeof NoLayoutImport
     }
+    '/_layout/history/index/$path/$id': {
+      id: '/_layout/history/index/$path/$id'
+      path: '/history/index/$path/$id'
+      fullPath: '/history/index/$path/$id'
+      preLoaderRoute: typeof LayoutHistoryIndexPathIdImport
+      parentRoute: typeof LayoutImport
+    }
   }
 }
 
@@ -208,6 +222,7 @@ interface LayoutRouteChildren {
   LayoutEmptyRoute: typeof LayoutEmptyRoute
   LayoutHomeRoute: typeof LayoutHomeRoute
   LayoutDocumentationRoute: typeof LayoutDocumentationRoute
+  LayoutHistoryIndexPathIdRoute: typeof LayoutHistoryIndexPathIdRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
@@ -215,6 +230,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutEmptyRoute: LayoutEmptyRoute,
   LayoutHomeRoute: LayoutHomeRoute,
   LayoutDocumentationRoute: LayoutDocumentationRoute,
+  LayoutHistoryIndexPathIdRoute: LayoutHistoryIndexPathIdRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -255,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/NotFound': typeof NoLayoutNotFoundRoute
   '/login': typeof NoLayoutLoginRoute
   '/logout': typeof NoLayoutLogoutRoute
+  '/history/index/$path/$id': typeof LayoutHistoryIndexPathIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -270,6 +287,7 @@ export interface FileRoutesByTo {
   '/NotFound': typeof NoLayoutNotFoundRoute
   '/login': typeof NoLayoutLoginRoute
   '/logout': typeof NoLayoutLogoutRoute
+  '/history/index/$path/$id': typeof LayoutHistoryIndexPathIdRoute
 }
 
 export interface FileRoutesById {
@@ -287,6 +305,7 @@ export interface FileRoutesById {
   '/_no-layout/NotFound': typeof NoLayoutNotFoundRoute
   '/_no-layout/login': typeof NoLayoutLoginRoute
   '/_no-layout/logout': typeof NoLayoutLogoutRoute
+  '/_layout/history/index/$path/$id': typeof LayoutHistoryIndexPathIdRoute
 }
 
 export interface FileRouteTypes {
@@ -304,6 +323,7 @@ export interface FileRouteTypes {
     | '/NotFound'
     | '/login'
     | '/logout'
+    | '/history/index/$path/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -318,6 +338,7 @@ export interface FileRouteTypes {
     | '/NotFound'
     | '/login'
     | '/logout'
+    | '/history/index/$path/$id'
   id:
     | '__root__'
     | '/'
@@ -333,6 +354,7 @@ export interface FileRouteTypes {
     | '/_no-layout/NotFound'
     | '/_no-layout/login'
     | '/_no-layout/logout'
+    | '/_layout/history/index/$path/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -372,7 +394,8 @@ export const routeTree = rootRoute
         "/_layout/DragDrop",
         "/_layout/Empty",
         "/_layout/Home",
-        "/_layout/documentation"
+        "/_layout/documentation",
+        "/_layout/history/index/$path/$id"
       ]
     },
     "/_no-layout": {
@@ -425,6 +448,10 @@ export const routeTree = rootRoute
     "/_no-layout/logout": {
       "filePath": "_no-layout/logout.tsx",
       "parent": "/_no-layout"
+    },
+    "/_layout/history/index/$path/$id": {
+      "filePath": "_layout/history/index.$path.$id.tsx",
+      "parent": "/_layout"
     }
   }
 }

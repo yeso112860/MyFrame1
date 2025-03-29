@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SoftDelete;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -37,6 +38,7 @@ public abstract class BaseEntity implements Persistable<UUID> {
 
     @Column(name = "degistirilme_tarihi")
     @LastModifiedDate
+    @DiffIgnore
     private LocalDateTime guncellenmeTarihi;
 
     @Column(name = "olusturan_kisi", nullable = false, updatable = false)
@@ -45,6 +47,7 @@ public abstract class BaseEntity implements Persistable<UUID> {
 
     @Column(name = "degistiren_kisi")
     @LastModifiedBy
+    @DiffIgnore
     private String guncelleyenKullanici;
 
 //    @Column(name = "silindi", nullable = false)

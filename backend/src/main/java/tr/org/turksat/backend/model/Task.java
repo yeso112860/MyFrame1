@@ -9,6 +9,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.javers.core.metamodel.annotation.DiffIgnore;
+import org.javers.core.metamodel.annotation.PropertyName;
 import org.javers.core.metamodel.annotation.ShallowReference;
 import tr.org.turksat.common.model.BaseEntity;
 
@@ -37,9 +39,9 @@ public class Task extends BaseEntity {
     private @Column(columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON) List<TaskHistory> history = new ArrayList<>();
     private @ManyToOne
-    @ShallowReference Kullanici assignedBy;
+    @DiffIgnore Kullanici assignedBy;
     private @ManyToOne
-    @ShallowReference Kullanici assignedTo;
+    @DiffIgnore Kullanici assignedTo;
     private @ManyToOne
-    @ShallowReference ParamStatus status;
+    @PropertyName("status.label") ParamStatus status;
 }
